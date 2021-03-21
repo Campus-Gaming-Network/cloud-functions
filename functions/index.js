@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 // onCall
 const searchGames = require("./onCall/searchGames");
-const searchSchools = require("./searchSchools");
-const searchUsers = require("./searchUsers");
-const reportEntity = require("./reportEntity");
+const searchSchools = require("./onCall/searchSchools");
+const searchUsers = require("./onCall/searchUsers");
+const reportEntity = require("./onCall/reportEntity");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onWrite
