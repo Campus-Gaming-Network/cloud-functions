@@ -5,7 +5,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-const { changeLog } = require("./utils");
+const { changeLog } = require("../utils");
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnSchoolUpdate
@@ -75,4 +75,3 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
 
     return null;
   });
-  

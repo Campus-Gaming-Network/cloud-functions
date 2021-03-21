@@ -30,4 +30,3 @@ exports.removeAlgoliaIndex = functions.firestore
       return algoliaAdminIndex.deleteObject(snapshot.id);
     }
   });
-  

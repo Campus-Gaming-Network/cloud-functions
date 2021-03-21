@@ -46,4 +46,3 @@ exports.eventResponsesOnCreated = functions.firestore
       return null;
     }
   });
-  

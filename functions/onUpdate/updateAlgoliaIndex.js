@@ -31,4 +31,3 @@ exports.updateAlgoliaIndex = functions.firestore
 
     return algoliaAdminIndex.saveObject({ ...newData, objectID });
   });
-  

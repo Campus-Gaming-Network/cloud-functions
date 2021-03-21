@@ -66,4 +66,3 @@ exports.userOnDelete = functions.firestore
 
     return auth.deleteUser(context.params.userId);
   });
-  

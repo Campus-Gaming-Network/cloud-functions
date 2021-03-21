@@ -6,7 +6,7 @@ admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 
-const { isValidEmail } = require("./utils");
+const { isValidEmail } = require("../utils");
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchUsers

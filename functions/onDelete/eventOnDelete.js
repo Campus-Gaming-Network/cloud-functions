@@ -40,4 +40,3 @@ exports.eventOnDelete = functions.firestore
         return false;
       });
   });
-  

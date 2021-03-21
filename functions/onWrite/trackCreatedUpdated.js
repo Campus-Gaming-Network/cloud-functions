@@ -83,4 +83,3 @@ exports.trackCreatedUpdated = functions.firestore
 
     return null;
   });
-  

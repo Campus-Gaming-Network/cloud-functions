@@ -5,7 +5,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
-const { shallowEqual, changeLog } = require("./utils");
+const { shallowEqual, changeLog } = require("../utils");
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnEventUpdate
@@ -110,4 +110,3 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
 
     return null;
   });
-  
