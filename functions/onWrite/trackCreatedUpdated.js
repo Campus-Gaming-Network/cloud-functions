@@ -1,7 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
+const { admin, functions } = require("../firebase");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // trackCreatedUpdated
@@ -19,13 +17,13 @@ exports.trackCreatedUpdated = functions.firestore
     ////////////////////////////////////////////////////////////////////////////////
 
     const setCols = [
-      "events",
-      "event-responses",
-      "users",
-      "schools",
-      "game-queries",
-      "configs",
-      "reports",
+      COLLECTIONS.SCHOOLS,
+      COLLECTIONS.USERS,
+      COLLECTIONS.EVENTS,
+      COLLECTIONS.EVENT_RESPONSES,
+      COLLECTIONS.GAME_QUERIES,
+      COLLECTIONS.CONFIGS,
+      COLLECTIONS.REPORTS,
     ];
 
     if (setCols.indexOf(context.params.colId) === -1) {

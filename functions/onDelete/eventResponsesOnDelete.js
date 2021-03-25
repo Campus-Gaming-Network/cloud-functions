@@ -1,9 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
+const { admin, db, functions } = require("../firebase");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnDelete
@@ -21,7 +17,7 @@ exports.eventResponsesOnDelete = functions.firestore
       const deletedData = snapshot.data();
 
       if (deletedData) {
-        const eventRef = db.collection("events").doc(deletedData.event.id);
+        const eventRef = db.collection(COLLECTIONS.EVENTS).doc(deletedData.event.id);
 
         if (eventRef.exists) {
           if (deletedData.response === "YES") {

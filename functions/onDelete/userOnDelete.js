@@ -1,10 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
-const auth = admin.auth();
+const { auth, db, functions } = require("../firebase");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // userOnDelete
@@ -22,12 +17,12 @@ exports.userOnDelete = functions.firestore
     //
     ////////////////////////////////////////////////////////////////////////////////
 
-    const userDocRef = db.collection("users").doc(context.params.userId);
+    const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
     const eventsQuery = db
-      .collection("events")
+      .collection(COLLECTIONS.EVENTS)
       .where("creator", "==", userDocRef);
     const eventResponsesQuery = db
-      .collection("event-responses")
+      .collection(COLLECTIONS.EVENT_RESPONSES)
       .where("user.ref", "==", userDocRef);
 
     eventResponsesQuery

@@ -1,9 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
+const { admin, db, functions } = require("../firebase");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnCreated
@@ -19,7 +15,7 @@ exports.eventResponsesOnCreated = functions.firestore
 
     if (snapshot.exists) {
       const eventResponseData = snapshot.data();
-      const eventRef = db.collection("events").doc(eventResponseData.event.id);
+      const eventRef = db.collection(COLLECTIONS.EVENTS).doc(eventResponseData.event.id);
 
       if (eventResponseData.response === "YES") {
         return eventRef

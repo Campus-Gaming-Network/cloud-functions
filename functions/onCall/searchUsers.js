@@ -1,12 +1,6 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
-const auth = admin.auth();
-
+const { auth, db, functions } = require("../firebase");
 const { isValidEmail } = require("../utils");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchUsers
@@ -37,7 +31,7 @@ exports.searchUsers = functions.https.onCall(async (data, context) => {
       }
 
       if (authRecord && authRecord.uid) {
-        record = await db.collection("users").doc(authRecord.uid).get();
+        record = await db.collection(COLLECTIONS.USERS).doc(authRecord.uid).get();
       }
     }
 

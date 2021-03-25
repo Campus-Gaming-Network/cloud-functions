@@ -1,16 +1,8 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
+const { admin, db, functions } = require("../firebase");
+const { IGDB_CLIENT_ID, IGDB_CLIENT_SECRET, IGDB_GRANT_TYPE, COLLECTIONS } = require("../constants");
 
 const rp = require("request-promise");
 const { DateTime } = require("luxon");
-
-const IGDB_CLIENT_ID = functions.config().igdb.client_id;
-const IGDB_CLIENT_SECRET = functions.config().igdb.client_secret;
-const IGDB_GRANT_TYPE = "client_credentials";
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchGames
@@ -52,8 +44,8 @@ exports.searchGames = functions.https.onCall(async (data) => {
     return { success: false, error: "Missing grant type" };
   }
 
-  const configsQueryRef = db.collection("configs").doc("igdb");
-  const gameQueryRef = db.collection("game-queries").doc(data.query);
+  const configsQueryRef = db.collection().doc("igdb");
+  const gameQueryRef = db.collection(COLLECTIONS.GAME_QUERIES).doc(data.query);
 
   let tokenStatus = "READY";
   let accessToken;
@@ -153,7 +145,7 @@ exports.searchGames = functions.https.onCall(async (data) => {
 
       try {
         await db
-          .collection("configs")
+          .collection(COLLECTIONS.CONFIGS)
           .doc("igdb")
           .set(
             {
@@ -205,7 +197,7 @@ exports.searchGames = functions.https.onCall(async (data) => {
     if (igdbResponse.length > 0) {
       try {
         await db
-          .collection("game-queries")
+          .collection(COLLECTIONS.GAME_QUERIES)
           .doc(data.query)
           .set(
             {

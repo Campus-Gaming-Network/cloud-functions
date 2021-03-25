@@ -1,4 +1,4 @@
-export const shallowEqual = (object1, object2) => {
+const shallowEqual = (object1, object2) => {
     const keys1 = Object.keys(object1);
     const keys2 = Object.keys(object2);
   
@@ -15,6 +15,12 @@ export const shallowEqual = (object1, object2) => {
     return true;
   };
   
-  export const changeLog = (prev, curr) => `${prev} -> ${curr}`;
+const changeLog = (prev, curr) => `${prev} -> ${curr}`;
   
-  export const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+module.exports = {
+  shallowEqual,
+  changeLog,
+  isValidEmail,
+};

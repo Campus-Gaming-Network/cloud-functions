@@ -1,18 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const algoliasearch = require("algoliasearch");
-
-const ALGOLIA_ID = functions.config().algolia.app;
-const ALGOLIA_SEARCH_KEY = functions.config().algolia.search;
-const ALGOLIA_SCHOOLS_COLLECTION = "prod_SCHOOLS";
-
-const algoliaSearchClient = algoliasearch(ALGOLIA_ID, ALGOLIA_SEARCH_KEY);
-const algoliaSearchIndex = algoliaSearchClient.initIndex(
-  ALGOLIA_SCHOOLS_COLLECTION
-);
+const { functions } = require("../firebase");
+const { algoliaSearchIndex } = require("../algolia");
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchSchools

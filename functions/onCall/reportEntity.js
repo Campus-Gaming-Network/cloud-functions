@@ -1,9 +1,5 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
+const { db, functions } = require("../firebase");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // reportEntity
@@ -14,7 +10,7 @@ exports.reportEntity = functions.https.onCall(async (data, context) => {
 
   const reportData = {
     reportingUser: {
-      ref: db.collection("users").doc(context.auth.uid),
+      ref: db.collection(COLLECTIONS.USERS).doc(context.auth.uid),
       id: context.auth.uid,
     },
     reason: data.reason,
@@ -50,7 +46,7 @@ exports.reportEntity = functions.https.onCall(async (data, context) => {
   }
 
   try {
-    await db.collection("reports").add(reportData);
+    await db.collection(COLLECTIONS.REPORTS).add(reportData);
   } catch (error) {
     return error;
   }

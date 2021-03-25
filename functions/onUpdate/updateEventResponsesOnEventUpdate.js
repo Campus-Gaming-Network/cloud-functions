@@ -1,11 +1,6 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
-
+const { db, functions } = require("../firebase");
 const { shallowEqual, changeLog } = require("../utils");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnEventUpdate
@@ -66,9 +61,9 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
     }
 
     if (changes.length > 0) {
-      const eventDocRef = db.collection("events").doc(context.params.eventId);
+      const eventDocRef = db.collection(COLLECTIONS.EVENTS).doc(context.params.eventId);
       const eventResponsesQuery = db
-        .collection("event-responses")
+        .collection(COLLECTIONS.EVENT_RESPONSES)
         .where("event.ref", "==", eventDocRef);
 
       console.log(

@@ -1,11 +1,6 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-
-admin.initializeApp();
-
-const db = admin.firestore();
-
+const { admin, db, functions } = require("../firebase");
 const { changeLog } = require("../utils");
+const { COLLECTIONS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnUpdated
@@ -34,7 +29,7 @@ exports.eventResponsesOnUpdated = functions.firestore
 
     if (changes.length > 0) {
       const eventRef = db
-        .collection("events")
+        .collection(COLLECTIONS.EVENTS)
         .doc(newEventResponseData.event.id);
 
       console.log(

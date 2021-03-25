@@ -1,3 +1,11 @@
+const admin = require("firebase-admin");
+
+try {
+  admin.initializeApp();
+} catch (error) {
+  // Do nothing
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // onCall
 const searchGames = require("./onCall/searchGames");
