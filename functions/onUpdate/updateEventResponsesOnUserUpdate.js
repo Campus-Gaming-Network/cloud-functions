@@ -32,6 +32,14 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
       changes.push(changeLog(previousUserData.gravatar, newUserData.gravatar));
     }
 
+    if (previousUserData.status !== newUserData.status) {
+      changes.push(changeLog(previousUserData.status, newUserData.status));
+    }
+
+    if (previousUserData.school.id !== newUserData.school.id) {
+      changes.push(changeLog(previousUserData.school.id, newUserData.school.id));
+    }
+
     if (changes.length > 0) {
       const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
       const eventResponsesQuery = db
@@ -56,6 +64,12 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
                     firstName: newUserData.firstName,
                     lastName: newUserData.lastName,
                     gravatar: newUserData.gravatar,
+                    status: newUserData.status,
+                    school: {
+                      id: newUserData.school.id,
+                      ref: newUserData.school.ref,
+                      name: newUserData.school.name,
+                    },
                   },
                 },
                 { merge: true }
