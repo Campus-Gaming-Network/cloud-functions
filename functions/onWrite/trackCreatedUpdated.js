@@ -58,7 +58,10 @@ exports.trackCreatedUpdated = functions.firestore
     if (createDoc) {
       return change.after.ref
         .set(
-          { createdAt: admin.firestore.FieldValue.serverTimestamp() },
+          {
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+          },
           { merge: true }
         )
         .catch((err) => {
