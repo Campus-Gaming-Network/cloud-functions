@@ -44,7 +44,7 @@ exports.searchGames = functions.https.onCall(async (data) => {
     return { success: false, error: "Missing grant type" };
   }
 
-  const configsQueryRef = db.collection().doc("igdb");
+  const configsQueryRef = db.collection(COLLECTIONS.CONFIGS).doc("igdb");
   const gameQueryRef = db.collection(COLLECTIONS.GAME_QUERIES).doc(data.query);
 
   let tokenStatus = "READY";
