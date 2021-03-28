@@ -17,13 +17,19 @@ exports.userOnDelete = functions.firestore
     //
     ////////////////////////////////////////////////////////////////////////////////
 
+    const userData = snapshot.data();
     const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
+    const schoolDocRef = db.collection(COLLECTIONS.SCHOOLS).doc(userData.school.id);
     const eventsQuery = db
       .collection(COLLECTIONS.EVENTS)
       .where("creator", "==", userDocRef);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
       .where("user.ref", "==", userDocRef);
+
+    schoolDocRef.set({ userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true }).catch((err) => {
+      console.log(err);
+    });
 
     eventResponsesQuery
       .get()
