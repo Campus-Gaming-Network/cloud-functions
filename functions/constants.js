@@ -1,5 +1,7 @@
 const { functions } = require("./firebase");
 
+const PRODUCTION_GCP_PROJECT = "campusgamingnetwork-b2128";
+
 // Firestore
 const COLLECTIONS = {
     SCHOOLS: "schools",
@@ -11,11 +13,11 @@ const COLLECTIONS = {
     REPORTS: "reports",
 };
 
-// ALGOLIA
+// Algolia
 const ALGOLIA_ID = functions.config().algolia.app;
 const ALGOLIA_ADMIN_KEY = functions.config().algolia.key;
 const ALGOLIA_SEARCH_KEY = functions.config().algolia.search;
-const ALGOLIA_SCHOOLS_COLLECTION = "prod_SCHOOLS";
+const ALGOLIA_SCHOOLS_COLLECTION = process.env.GCP_PROJECT === PRODUCTION_GCP_PROJECT ? "prod_SCHOOLS" : "test_SCHOOLS";
 
 // IGDB
 const IGDB_CLIENT_ID = functions.config().igdb.client_id;
