@@ -12,6 +12,11 @@ const COLLECTIONS = {
     CONFIGS: "configs",
     REPORTS: "reports",
 };
+const DOCUMENT_PATHS = {
+    USER: "users/{userId}",
+    SCHOOL: "schools/{schoolId}",
+    EVENT_RESPONSES: "event-responses/{eventResponseId}",
+};
 
 // Algolia
 const ALGOLIA_ID = functions.config().algolia.app;
@@ -26,6 +31,7 @@ const IGDB_GRANT_TYPE = "client_credentials";
 
 module.exports = {
     COLLECTIONS,
+    DOCUMENT_PATHS,
     ALGOLIA_ID,
     ALGOLIA_ADMIN_KEY,
     ALGOLIA_SEARCH_KEY,

@@ -24,11 +24,13 @@ const updateEventResponsesOnEventUpdate = require("./onUpdate/updateEventRespons
 const updateEventResponsesOnSchoolUpdate = require("./onUpdate/updateEventResponsesOnSchoolUpdate");
 const updateEventResponsesOnUserUpdate = require("./onUpdate/updateEventResponsesOnUserUpdate");
 const eventResponsesOnUpdated = require("./onUpdate/eventResponsesOnUpdated");
+const updateSchoolUserCountOnUserUpdate = require("./onUpdate/updateSchoolUserCountOnUserUpdate");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onCreate
 const addAlgoliaIndex = require("./onCreate/addAlgoliaIndex");
 const eventResponsesOnCreated = require("./onCreate/eventResponsesOnCreated");
+const userOnCreated = require("./onCreate/userOnCreated");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onDelete
@@ -51,9 +53,11 @@ exports.updateEventResponsesOnUserUpdate =
   updateEventResponsesOnUserUpdate.updateEventResponsesOnUserUpdate;
 exports.eventResponsesOnUpdated =
   eventResponsesOnUpdated.eventResponsesOnUpdated;
+exports.updateSchoolUserCountOnUserUpdate = updateSchoolUserCountOnUserUpdate.updateSchoolUserCountOnUserUpdate;
 exports.addAlgoliaIndex = addAlgoliaIndex.addAlgoliaIndex;
 exports.eventResponsesOnCreated =
   eventResponsesOnCreated.eventResponsesOnCreated;
+exports.userOnCreated = userOnCreated.userOnCreated;
 exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;
 exports.eventOnDelete = eventOnDelete.eventOnDelete;
 exports.userOnDelete = userOnDelete.userOnDelete;

@@ -1,14 +1,14 @@
 const { admin, db, functions } = require("../firebase");
-const { COLLECTIONS } = require("../constants");
+const { COLLECTIONS, DOCUMENT_PATHS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // userOnCreated
 exports.userOnCreated = functions.firestore
-  .document("user/{userId}")
+  .document(DOCUMENT_PATHS.USER)
   .onCreate((snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
-    // To keep track of how many users are apart of a school, when a user is created
+    // To keep track of how many users belong to a school, when a user is created
     // find the school tied to it and increment the userCount by 1.
     //
     ////////////////////////////////////////////////////////////////////////////////

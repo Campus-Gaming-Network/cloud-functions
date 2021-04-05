@@ -1,10 +1,10 @@
-const { auth, db, functions } = require("../firebase");
-const { COLLECTIONS } = require("../constants");
+const { auth, db, admin, functions } = require("../firebase");
+const { COLLECTIONS, DOCUMENT_PATHS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
 // userOnDelete
 exports.userOnDelete = functions.firestore
-  .document("users/{userId}")
+  .document(DOCUMENT_PATHS.USER)
   .onDelete((snapshot, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

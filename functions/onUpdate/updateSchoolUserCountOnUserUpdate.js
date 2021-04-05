@@ -20,21 +20,15 @@ exports.updateSchoolUserCountOnUserUpdate = functions.firestore
         const prevSchoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(previousUserData.school.id);
         const newSchoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(previousUserData.school.id);
 
-        try {
-            await prevSchoolRef.set({ userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true });
-        } catch (error) {
+        prevSchoolRef.set({ userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true }).then(() => {
+            newSchoolRef.set({ userCount: admin.firestore.FieldValue.increment(1) }, { merge: true }).catch(() => {
+                console.log(error);
+                return false;
+            });
+        }).catch((error) => {
             console.log(error);
             return false;
-        }
-
-        try {
-            await newSchoolRef.set({ userCount: admin.firestore.FieldValue.increment(1) }, { merge: true });    
-        } catch (error) {
-            console.log(error);
-            return false;
-        }
-
-        return true;
+        });
     }
 
     return null;
