@@ -31,6 +31,7 @@ const updateSchoolUserCountOnUserUpdate = require("./onUpdate/updateSchoolUserCo
 const addAlgoliaIndex = require("./onCreate/addAlgoliaIndex");
 const eventResponsesOnCreated = require("./onCreate/eventResponsesOnCreated");
 const userOnCreated = require("./onCreate/userOnCreated");
+const authUserOnCreated = require("./onCreate/authUserOnCreated");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onDelete
@@ -58,6 +59,7 @@ exports.addAlgoliaIndex = addAlgoliaIndex.addAlgoliaIndex;
 exports.eventResponsesOnCreated =
   eventResponsesOnCreated.eventResponsesOnCreated;
 exports.userOnCreated = userOnCreated.userOnCreated;
+exports.authUserOnCreated = authUserOnCreated.authUserOnCreated;
 exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;
 exports.eventOnDelete = eventOnDelete.eventOnDelete;
 exports.userOnDelete = userOnDelete.userOnDelete;

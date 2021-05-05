@@ -1,6 +1,6 @@
 const { functions } = require("./firebase");
 
-const PRODUCTION_GCP_PROJECT = "campusgamingnetwork-b2128";
+const PRODUCTION_GCLOUD_PROJECT = "campusgamingnetwork-b2128";
 
 // Firestore
 const COLLECTIONS = {
@@ -22,12 +22,15 @@ const DOCUMENT_PATHS = {
 const ALGOLIA_ID = functions.config().algolia.app;
 const ALGOLIA_ADMIN_KEY = functions.config().algolia.key;
 const ALGOLIA_SEARCH_KEY = functions.config().algolia.search;
-const ALGOLIA_SCHOOLS_COLLECTION = process.env.GCP_PROJECT === PRODUCTION_GCP_PROJECT ? "prod_SCHOOLS" : "test_SCHOOLS";
+const ALGOLIA_SCHOOLS_COLLECTION = process.env.GCLOUD_PROJECT === PRODUCTION_GCLOUD_PROJECT ? "prod_SCHOOLS" : "test_SCHOOLS";
 
 // IGDB
 const IGDB_CLIENT_ID = functions.config().igdb.client_id;
 const IGDB_CLIENT_SECRET = functions.config().igdb.client_secret;
 const IGDB_GRANT_TYPE = "client_credentials";
+
+// Discord
+const DISCORD_WEBHOOK_URL = functions.config().discord.webhook_url;
 
 module.exports = {
     COLLECTIONS,
@@ -39,4 +42,5 @@ module.exports = {
     IGDB_CLIENT_ID,
     IGDB_CLIENT_SECRET,
     IGDB_GRANT_TYPE,
+    DISCORD_WEBHOOK_URL,
 };
