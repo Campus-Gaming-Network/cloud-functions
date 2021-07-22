@@ -1,3 +1,9 @@
+const { customAlphabet } = require('nanoid');
+const { NANO_ALPHABET, NANO_ID_LENGTH } = require("./constants");
+
+// Returns a callable function
+const nanoid = customAlphabet(NANO_ALPHABET, NANO_ID_LENGTH);
+
 const shallowEqual = (object1, object2) => {
     const keys1 = Object.keys(object1);
     const keys2 = Object.keys(object2);
@@ -23,4 +29,5 @@ module.exports = {
   shallowEqual,
   changeLog,
   isValidEmail,
+  nanoid,
 };

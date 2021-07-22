@@ -24,6 +24,8 @@ exports.trackCreatedUpdated = functions.firestore
       COLLECTIONS.GAME_QUERIES,
       COLLECTIONS.CONFIGS,
       COLLECTIONS.REPORTS,
+      COLLECTIONS.TEAMS,
+      COLLECTIONS.TEAMS_AUTH,
     ];
 
     if (setCols.indexOf(context.params.colId) === -1) {

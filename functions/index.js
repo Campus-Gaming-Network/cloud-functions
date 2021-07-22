@@ -32,7 +32,7 @@ const addAlgoliaIndex = require("./onCreate/addAlgoliaIndex");
 const eventResponsesOnCreated = require("./onCreate/eventResponsesOnCreated");
 const userOnCreated = require("./onCreate/userOnCreated");
 const authUserOnCreated = require("./onCreate/authUserOnCreated");
-
+const teamOnCreated = require("./onCreate/teamOnCreated");
 ////////////////////////////////////////////////////////////////////////////////
 // onDelete
 const removeAlgoliaIndex = require("./onDelete/removeAlgoliaIndex");
@@ -60,6 +60,7 @@ exports.eventResponsesOnCreated =
   eventResponsesOnCreated.eventResponsesOnCreated;
 exports.userOnCreated = userOnCreated.userOnCreated;
 exports.authUserOnCreated = authUserOnCreated.authUserOnCreated;
+exports.teamOnCreated = teamOnCreated.teamOnCreated;
 exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;
 exports.eventOnDelete = eventOnDelete.eventOnDelete;
 exports.userOnDelete = userOnDelete.userOnDelete;

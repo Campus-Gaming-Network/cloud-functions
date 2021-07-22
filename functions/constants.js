@@ -11,11 +11,14 @@ const COLLECTIONS = {
     GAME_QUERIES: "game-queries",
     CONFIGS: "configs",
     REPORTS: "reports",
+    TEAMS: "teams",
+    TEAMS_AUTH: "teams-auth",
 };
 const DOCUMENT_PATHS = {
     USER: "users/{userId}",
     SCHOOL: "schools/{schoolId}",
     EVENT_RESPONSES: "event-responses/{eventResponseId}",
+    TEAM: "teams/{teamId}",
 };
 
 // Algolia
@@ -32,6 +35,10 @@ const IGDB_GRANT_TYPE = "client_credentials";
 // Discord
 const DISCORD_WEBHOOK_URL = functions.config().discord.webhook_url;
 
+// Nanoid
+const NANO_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const NANO_ID_LENGTH = 10;
+
 module.exports = {
     COLLECTIONS,
     DOCUMENT_PATHS,
@@ -43,4 +50,6 @@ module.exports = {
     IGDB_CLIENT_SECRET,
     IGDB_GRANT_TYPE,
     DISCORD_WEBHOOK_URL,
+    NANO_ALPHABET,
+    NANO_ID_LENGTH,
 };
