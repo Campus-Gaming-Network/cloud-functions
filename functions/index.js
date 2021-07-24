@@ -12,6 +12,7 @@ const searchGames = require("./onCall/searchGames");
 const searchSchools = require("./onCall/searchSchools");
 const searchUsers = require("./onCall/searchUsers");
 const reportEntity = require("./onCall/reportEntity");
+const joinTeam = require("./onCall/joinTeam");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onWrite
@@ -23,6 +24,7 @@ const updateAlgoliaIndex = require("./onUpdate/updateAlgoliaIndex");
 const updateEventResponsesOnEventUpdate = require("./onUpdate/updateEventResponsesOnEventUpdate");
 const updateEventResponsesOnSchoolUpdate = require("./onUpdate/updateEventResponsesOnSchoolUpdate");
 const updateEventResponsesOnUserUpdate = require("./onUpdate/updateEventResponsesOnUserUpdate");
+const updateTeammatesOnUserUpdate = require("./onUpdate/updateTeammatesOnUserUpdate");
 const eventResponsesOnUpdated = require("./onUpdate/eventResponsesOnUpdated");
 const updateSchoolUserCountOnUserUpdate = require("./onUpdate/updateSchoolUserCountOnUserUpdate");
 
@@ -33,17 +35,20 @@ const eventResponsesOnCreated = require("./onCreate/eventResponsesOnCreated");
 const userOnCreated = require("./onCreate/userOnCreated");
 const authUserOnCreated = require("./onCreate/authUserOnCreated");
 const teamOnCreated = require("./onCreate/teamOnCreated");
+
 ////////////////////////////////////////////////////////////////////////////////
 // onDelete
 const removeAlgoliaIndex = require("./onDelete/removeAlgoliaIndex");
 const eventOnDelete = require("./onDelete/eventOnDelete");
 const userOnDelete = require("./onDelete/userOnDelete");
 const eventResponsesOnDelete = require("./onDelete/eventResponsesOnDelete");
+const teamOnDelete = require('./onDelete/teamOnDelete');
 
 exports.searchGames = searchGames.searchGames;
 exports.searchSchools = searchSchools.searchSchools;
 exports.searchUsers = searchUsers.searchUsers;
 exports.reportEntity = reportEntity.reportEntity;
+exports.joinTeam = joinTeam.joinTeam;
 exports.trackCreatedUpdated = trackCreatedUpdated.trackCreatedUpdated;
 exports.updateAlgoliaIndex = updateAlgoliaIndex.updateAlgoliaIndex;
 exports.updateEventResponsesOnEventUpdate =
@@ -52,6 +57,7 @@ exports.updateEventResponsesOnSchoolUpdate =
   updateEventResponsesOnSchoolUpdate.updateEventResponsesOnSchoolUpdate;
 exports.updateEventResponsesOnUserUpdate =
   updateEventResponsesOnUserUpdate.updateEventResponsesOnUserUpdate;
+exports.updateTeammatesOnUserUpdate = updateTeammatesOnUserUpdate.updateTeammatesOnUserUpdate;
 exports.eventResponsesOnUpdated =
   eventResponsesOnUpdated.eventResponsesOnUpdated;
 exports.updateSchoolUserCountOnUserUpdate = updateSchoolUserCountOnUserUpdate.updateSchoolUserCountOnUserUpdate;
@@ -65,3 +71,4 @@ exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;
 exports.eventOnDelete = eventOnDelete.eventOnDelete;
 exports.userOnDelete = userOnDelete.userOnDelete;
 exports.eventResponsesOnDelete = eventResponsesOnDelete.eventResponsesOnDelete;
+exports.teamOnDelete = teamOnDelete.teamOnDelete;

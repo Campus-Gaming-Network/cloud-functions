@@ -25,9 +25,12 @@ const changeLog = (prev, curr) => `${prev} -> ${curr}`;
   
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+const isAuthenticated = context => Boolean(context) && Boolean(context.auth) && Boolean(context.auth.uid);
+
 module.exports = {
   shallowEqual,
   changeLog,
   isValidEmail,
   nanoid,
+  isAuthenticated,
 };

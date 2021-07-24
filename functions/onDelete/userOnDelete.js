@@ -10,7 +10,7 @@ exports.userOnDelete = functions.firestore
     //
     // A user can delete their account whenever they want.
     //
-    // If they decide to do this, find all documents (events, event-responses) that are attached to this user
+    // If they decide to do this, find all documents (events, event-responses, teammates, teams?) that are attached to this user
     // and delete those too so there is no record of them.
     //
     // We delete both the firestore document of the user and their auth user profile.
@@ -25,6 +25,9 @@ exports.userOnDelete = functions.firestore
       .where("creator", "==", userDocRef);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
+      .where("user.ref", "==", userDocRef);
+    const teammatesQuery = db
+      .collection(COLLECTIONS.TEAMMATES)
       .where("user.ref", "==", userDocRef);
 
     schoolDocRef.set({ userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true }).catch((err) => {
@@ -49,6 +52,23 @@ exports.userOnDelete = functions.firestore
       });
 
     eventsQuery
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          let batch = db.batch();
+
+          querySnapshot.forEach((doc) => {
+            batch.delete(doc.ref);
+          });
+
+          batch.commit();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    teammatesQuery
       .get()
       .then((querySnapshot) => {
         if (!querySnapshot.empty) {

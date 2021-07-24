@@ -1,12 +1,12 @@
-const { db, functions } = require("../firebase");
+const { db, functions, admin } = require("../firebase");
 const { COLLECTIONS, DOCUMENT_PATHS } = require("../constants");
-const { nanoid } = require("../utils");
+const { nanoid, isAuthenticated } = require("../utils");
 
 ////////////////////////////////////////////////////////////////////////////////
 // teamOnCreated
 exports.teamOnCreated = functions.firestore
   .document(DOCUMENT_PATHS.TEAM)
-  .onCreate((snapshot, context) => {
+  .onCreate(async (snapshot, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // Create auth config for teams so that the leader of the team can update the 
@@ -17,24 +17,34 @@ exports.teamOnCreated = functions.firestore
 
     if (snapshot.exists) {
         const teamData = snapshot.data();
+        const userRef = db.collection(COLLECTIONS.USERS).doc(teamData.creator.id);
         const teamRef = db.collection(COLLECTIONS.TEAMS).doc(context.params.teamId);
-        const teamAuthData = {
+        const teamsAuthData = {
             leader: {
                 id: teamData.creator.id,
-                ref: teamData.creator.ref,
+                ref: userRef,
             },
             team: {
-                id: teamRef.id,
-                ref: teamRef,   
+                id: context.params.teamId,
+                ref: teamRef,
             },
             password: nanoid(),
         };
 
-        db.collection(COLLECTIONS.TEAMS_AUTH).add(teamAuthData).catch((err) => {
-            console.log(err);
-            return false;
-        });
+        try {
+            await db.collection(COLLECTIONS.TEAMS_AUTH).add(teamsAuthData);  
+        } catch (error) {
+            return { error };
+        }
+
+        try {
+            await teamRef.update({
+                creator: admin.firestore.FieldValue.delete(),
+            });            
+        } catch (error) {
+            return { error };
+        }
     }
 
-    return null;
+    return;
   });

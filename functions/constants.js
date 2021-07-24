@@ -13,12 +13,14 @@ const COLLECTIONS = {
     REPORTS: "reports",
     TEAMS: "teams",
     TEAMS_AUTH: "teams-auth",
+    TEAMMATES: "teammates",
 };
 const DOCUMENT_PATHS = {
     USER: "users/{userId}",
     SCHOOL: "schools/{schoolId}",
     EVENT_RESPONSES: "event-responses/{eventResponseId}",
     TEAM: "teams/{teamId}",
+    TEAMMATES: "teammates/{teammatesId}",
 };
 
 // Algolia
