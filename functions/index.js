@@ -44,7 +44,7 @@ const eventOnDelete = require("./onDelete/eventOnDelete");
 const userOnDelete = require("./onDelete/userOnDelete");
 const eventResponsesOnDelete = require("./onDelete/eventResponsesOnDelete");
 const teamOnDelete = require('./onDelete/teamOnDelete');
-const teammateOnDelete = require("./onCreate/teammateOnDelete");
+const teammateOnDelete = require("./onDelete/teammateOnDelete");
 
 exports.searchGames = searchGames.searchGames;
 exports.searchSchools = searchSchools.searchSchools;
