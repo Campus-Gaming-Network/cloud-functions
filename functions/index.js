@@ -35,6 +35,7 @@ const eventResponsesOnCreated = require("./onCreate/eventResponsesOnCreated");
 const userOnCreated = require("./onCreate/userOnCreated");
 const authUserOnCreated = require("./onCreate/authUserOnCreated");
 const teamOnCreated = require("./onCreate/teamOnCreated");
+const teammateOnCreated = require("./onCreate/teammateOnCreated");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onDelete
@@ -43,6 +44,7 @@ const eventOnDelete = require("./onDelete/eventOnDelete");
 const userOnDelete = require("./onDelete/userOnDelete");
 const eventResponsesOnDelete = require("./onDelete/eventResponsesOnDelete");
 const teamOnDelete = require('./onDelete/teamOnDelete');
+const teammateOnDelete = require("./onCreate/teammateOnDelete");
 
 exports.searchGames = searchGames.searchGames;
 exports.searchSchools = searchSchools.searchSchools;
@@ -67,6 +69,8 @@ exports.eventResponsesOnCreated =
 exports.userOnCreated = userOnCreated.userOnCreated;
 exports.authUserOnCreated = authUserOnCreated.authUserOnCreated;
 exports.teamOnCreated = teamOnCreated.teamOnCreated;
+exports.teammateOnCreated = teammateOnCreated.teammateOnCreated
+exports.teammateOnDelete = teammateOnDelete.teammateOnDelete
 exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;
 exports.eventOnDelete = eventOnDelete.eventOnDelete;
 exports.userOnDelete = userOnDelete.userOnDelete;
