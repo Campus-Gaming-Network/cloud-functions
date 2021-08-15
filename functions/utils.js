@@ -1,5 +1,6 @@
 const { customAlphabet } = require('nanoid');
-const { NANO_ALPHABET, NANO_ID_LENGTH } = require("./constants");
+const bcrypt = require('bcrypt');
+const { NANO_ALPHABET, NANO_ID_LENGTH, SALT_ROUNDS } = require("./constants");
 
 // Returns a callable function
 const nanoid = customAlphabet(NANO_ALPHABET, NANO_ID_LENGTH);
@@ -27,10 +28,16 @@ const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const isAuthenticated = context => Boolean(context) && Boolean(context.auth) && Boolean(context.auth.uid);
 
+const hashPassword = async (password) => await bcrypt.hash(password, SALT_ROUNDS);
+
+const comparePasswords = async (password, hash) => await bcrypt.compare(password, hash);
+
 module.exports = {
   shallowEqual,
   changeLog,
   isValidEmail,
   nanoid,
   isAuthenticated,
+  hashPassword,
+  comparePasswords,
 };

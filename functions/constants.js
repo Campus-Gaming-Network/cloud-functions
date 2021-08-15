@@ -41,6 +41,9 @@ const DISCORD_WEBHOOK_URL = functions.config().discord.webhook_url;
 const NANO_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const NANO_ID_LENGTH = 10;
 
+// Bcrypt
+const SALT_ROUNDS = 10;
+
 module.exports = {
     COLLECTIONS,
     DOCUMENT_PATHS,
@@ -54,4 +57,5 @@ module.exports = {
     DISCORD_WEBHOOK_URL,
     NANO_ALPHABET,
     NANO_ID_LENGTH,
+    SALT_ROUNDS,
 };

@@ -12,6 +12,7 @@ const searchGames = require("./onCall/searchGames");
 const searchSchools = require("./onCall/searchSchools");
 const searchUsers = require("./onCall/searchUsers");
 const reportEntity = require("./onCall/reportEntity");
+const createTeam = require("./onCall/createTeam");
 const joinTeam = require("./onCall/joinTeam");
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,6 @@ const addAlgoliaIndex = require("./onCreate/addAlgoliaIndex");
 const eventResponsesOnCreated = require("./onCreate/eventResponsesOnCreated");
 const userOnCreated = require("./onCreate/userOnCreated");
 const authUserOnCreated = require("./onCreate/authUserOnCreated");
-const teamOnCreated = require("./onCreate/teamOnCreated");
 const teammateOnCreated = require("./onCreate/teammateOnCreated");
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +50,7 @@ exports.searchGames = searchGames.searchGames;
 exports.searchSchools = searchSchools.searchSchools;
 exports.searchUsers = searchUsers.searchUsers;
 exports.reportEntity = reportEntity.reportEntity;
+exports.createTeam = createTeam.createTeam;
 exports.joinTeam = joinTeam.joinTeam;
 exports.trackCreatedUpdated = trackCreatedUpdated.trackCreatedUpdated;
 exports.updateAlgoliaIndex = updateAlgoliaIndex.updateAlgoliaIndex;
@@ -68,7 +69,6 @@ exports.eventResponsesOnCreated =
   eventResponsesOnCreated.eventResponsesOnCreated;
 exports.userOnCreated = userOnCreated.userOnCreated;
 exports.authUserOnCreated = authUserOnCreated.authUserOnCreated;
-exports.teamOnCreated = teamOnCreated.teamOnCreated;
 exports.teammateOnCreated = teammateOnCreated.teammateOnCreated
 exports.teammateOnDelete = teammateOnDelete.teammateOnDelete
 exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;

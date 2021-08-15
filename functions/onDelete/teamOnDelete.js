@@ -10,6 +10,9 @@ exports.teamOnDelete = functions.firestore
     //
     // If a user deletes a team, find all the team-auths tied to the team and
     // delete those too.
+    // 
+    // TODO: If the team has members, dont allow them to delete it? Or just display
+    // a warning on the frontend?
     //
     ////////////////////////////////////////////////////////////////////////////////
 
