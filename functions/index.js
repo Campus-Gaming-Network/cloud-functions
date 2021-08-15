@@ -69,8 +69,8 @@ exports.eventResponsesOnCreated =
   eventResponsesOnCreated.eventResponsesOnCreated;
 exports.userOnCreated = userOnCreated.userOnCreated;
 exports.authUserOnCreated = authUserOnCreated.authUserOnCreated;
-exports.teammateOnCreated = teammateOnCreated.teammateOnCreated
-exports.teammateOnDelete = teammateOnDelete.teammateOnDelete
+exports.teammateOnCreated = teammateOnCreated.teammateOnCreated;
+exports.teammateOnDelete = teammateOnDelete.teammateOnDelete;
 exports.removeAlgoliaIndex = removeAlgoliaIndex.removeAlgoliaIndex;
 exports.eventOnDelete = eventOnDelete.eventOnDelete;
 exports.userOnDelete = userOnDelete.userOnDelete;

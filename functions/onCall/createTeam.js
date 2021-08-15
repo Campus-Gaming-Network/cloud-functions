@@ -48,6 +48,7 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
         ref: userDocRef,
       },
     },
+    memberCount: 0,
   };
 
   let teamDocRef;

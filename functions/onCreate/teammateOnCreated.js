@@ -2,8 +2,8 @@ const { admin, db, functions } = require("../firebase");
 const { COLLECTIONS, DOCUMENT_PATHS } = require("../constants");
 
 ////////////////////////////////////////////////////////////////////////////////
-// teammatesOnCreated
-exports.teammatesOnCreated = functions.firestore
+// teammateOnCreated
+exports.teammateOnCreated = functions.firestore
   .document(DOCUMENT_PATHS.TEAMMATES)
   .onCreate((snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////

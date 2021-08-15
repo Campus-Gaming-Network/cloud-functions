@@ -24,31 +24,33 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   let user;
 
   try {
-    const snapshot = await db
+    const teamsAuthSnapshot = await db
       .collection(COLLECTIONS.TEAMS_AUTH)
       .where("team.ref", "==", teamDocRef)
+      .limit(1)
       .get();
 
-    if (snapshot.empty) {
+    if (teamsAuthSnapshot.empty) {
       return { error: { message: "Invalid team" } };
     }
 
-    teamAuth = snapshot[0].data();
+    const doc = teamsAuthSnapshot.docs[0];
+
+    teamAuth = doc.data();
   } catch (error) {
     return { error };
   }
 
   if (Boolean(teamAuth)) {
-    if (!await comparePasswords(data.password, teamAuth.joinHash)) {
+    const isValidPassword = await comparePasswords(data.password, teamAuth.joinHash);
+
+    if (!isValidPassword) {
       return { error: { message: "Invalid password" } };
     }
   }
 
   try {
-    const record = await db
-      .collection(COLLECTIONS.TEAMS)
-      .doc(teamAuth.team.id)
-      .get();
+    const record = await teamDocRef.get();
 
     if (!record.exists) {
       return { error: { message: "Invalid team" } };
@@ -59,11 +61,10 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
     return { error };
   }
 
+  const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
+
   try {
-    const record = await db
-      .collection(COLLECTIONS.USERS)
-      .doc(context.auth.uid)
-      .get();
+    const record = await userDocRef.get();
 
     if (!record.exists) {
       return { error: { message: "Invalid user" } };
@@ -75,30 +76,46 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   }
 
   try {
-    await db.collection(COLLECTIONS.TEAMMATES).add({
-      user: {
-        id: user.id,
-        ref: user.ref,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        gravatar: user.gravatar,
-        status: user.status,
-        school: {
-          ref: user.school.ref,
-          id: user.school.id,
-          name: user.school.name,
-        },
-      },
-      team: {
-        id: team.id,
-        ref: team.ref,
-        name: team.name,
-        shortName: team.shortName,
-      },
-    });
+    const teammatesSnapshot = await db
+      .collection(COLLECTIONS.TEAMMATES)
+      .where("user.ref", "==", userDocRef)
+      .where("team.ref", "==", teamDocRef)
+      .get();
+
+    if (!teammatesSnapshot.empty) {
+      return { error: { message: "Already joined team" } };
+    }
   } catch (error) {
     return { error };
   }
 
-  return null;
+  const teammateData = {
+    user: {
+      id: user.id,
+      ref: userDocRef,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      gravatar: user.gravatar,
+      status: user.status,
+      school: {
+        ref: user.school.ref,
+        id: user.school.id,
+        name: user.school.name,
+      },
+    },
+    team: {
+      id: team.id,
+      ref: teamDocRef,
+      name: team.name,
+      shortName: team.shortName,
+    },
+  };
+
+  try {
+    await db.collection(COLLECTIONS.TEAMMATES).add(teammateData);
+  } catch (error) {
+    return { error };
+  }
+
+  return { teamId: team.id };
 });
