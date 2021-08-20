@@ -5,7 +5,7 @@ const { isAuthenticated, hashPassword } = require("../utils");
 ////////////////////////////////////////////////////////////////////////////////
 // createTeam
 exports.createTeam = functions.https.onCall(async (data, context) => {
-  if (!isAuthenticated(context) || !data) {
+  if (!isAuthenticated(context) || !data || !hasVerifiedEmail(context)) {
     return { error: { message: "Invalid request" } };
   }
 

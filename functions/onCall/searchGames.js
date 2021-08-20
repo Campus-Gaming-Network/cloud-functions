@@ -6,7 +6,7 @@ const { DateTime } = require("luxon");
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchGames
-exports.searchGames = functions.https.onCall(async (data) => {
+exports.searchGames = functions.https.onCall(async (data, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Searches IGDB for games matching search query.

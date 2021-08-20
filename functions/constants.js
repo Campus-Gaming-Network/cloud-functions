@@ -44,6 +44,13 @@ const NANO_ID_LENGTH = 10;
 // Bcrypt
 const SALT_ROUNDS = 10;
 
+// Other
+const TEAM_ROLE_TYPES = {
+    LEADER: "leader",
+    OFFICER: "officer",
+};
+const TEAM_ROLES = Object.values(TEAM_ROLE_TYPES);
+
 module.exports = {
     COLLECTIONS,
     DOCUMENT_PATHS,
@@ -58,4 +65,5 @@ module.exports = {
     NANO_ALPHABET,
     NANO_ID_LENGTH,
     SALT_ROUNDS,
+    TEAM_ROLES,
 };

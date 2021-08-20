@@ -13,10 +13,15 @@ exports.teammateOnDelete = functions.firestore
     //
     ////////////////////////////////////////////////////////////////////////////////
 
+    console.log('snapshot.exists', snapshot.exists)
+
     if (snapshot.exists) {
       const deletedData = snapshot.data();
 
+      console.log('deletedData', deletedData)
+
       if (deletedData) {
+        console.log('deletedData.team.id', deletedData.team.id)
         const teamRef = db.collection(COLLECTIONS.TEAMS).doc(deletedData.team.id);
 
         if (teamRef.exists) {

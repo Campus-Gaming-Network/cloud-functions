@@ -3,7 +3,7 @@ const { algoliaSearchIndex } = require("../algolia");
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchSchools
-exports.searchSchools = functions.https.onCall(async (data) => {
+exports.searchSchools = functions.https.onCall(async (data, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Searches Algolia for schools matching search query.
