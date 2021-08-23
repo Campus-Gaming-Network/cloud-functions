@@ -37,31 +37,31 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
     return { error };
   }
 
-  if (
-      team.roles.leader.id !== context.auth.uid ||
-      (
-        Boolean(team.roles.officer) &&
-        team.roles.officer.id !== context.auth.uid    
-      )
-    ) {
+  const isTeamLeader = team.roles.leader.id === context.auth.uid;
+  const isTeamOfficer = (
+    Boolean(team.roles.officer) &&
+    team.roles.officer.id === context.auth.uid    
+  );
+
+  if (isTeamLeader || isTeamOfficer) {
+      const userDocRef = db.collection(COLLECTIONS.USERS).doc(teammateId);
+
+      try {
+        const teammatesSnapshot = await db
+          .collection(COLLECTIONS.TEAMMATES)
+          .where("user.ref", "==", userDocRef)
+          .where("team.ref", "==", teamDocRef)
+          .limit(1)
+          .get();
+    
+        if (!teammatesSnapshot.empty) {
+          teammatesSnapshot.docs[0].ref.delete();
+        }
+      } catch (error) {
+        return { error };
+      }
+  } else {
     return { error: { message: "Invalid permissions" } };
-  }
-
-  const userDocRef = db.collection(COLLECTIONS.USERS).doc(teammateId);
-
-  try {
-    const teammatesSnapshot = await db
-      .collection(COLLECTIONS.TEAMMATES)
-      .where("user.ref", "==", userDocRef)
-      .where("team.ref", "==", teamDocRef)
-      .limit(1)
-      .get();
-
-    if (!teammatesSnapshot.empty) {
-      teammatesSnapshot.docs[0].ref.delete();
-    }
-  } catch (error) {
-    return { error };
   }
 
   return { success: true };

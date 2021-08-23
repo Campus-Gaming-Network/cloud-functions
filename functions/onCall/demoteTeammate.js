@@ -1,10 +1,10 @@
-const { db, functions } = require("../firebase");
+const { admin, db, functions } = require("../firebase");
 const { COLLECTIONS, TEAM_ROLES } = require("../constants");
 const { isAuthenticated } = require("../utils");
 
 ////////////////////////////////////////////////////////////////////////////////
-// promoteTeammate
-exports.promoteTeammate = functions.https.onCall(async (data, context) => {
+// demoteTeammate
+exports.demoteTeammate = functions.https.onCall(async (data, context) => {
   if (!isAuthenticated(context) || !data) {
     return { error: { message: "Invalid request" } };
   }
@@ -17,18 +17,9 @@ exports.promoteTeammate = functions.https.onCall(async (data, context) => {
     return { error: { message: "Teammate id required" } };
   }
 
-  if (!data.role || !data.role.trim()) {
-    return { error: { message: "Teammate role is required" } };
-  }
-
-  if (!TEAM_ROLES.includes(data.role)) {
-    return { error: { message: "Invalid teammate role" } };
-  }
-
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
 
   let team;
-  let user;
 
   try {
     const record = await teamDocRef.get();
@@ -45,31 +36,14 @@ exports.promoteTeammate = functions.https.onCall(async (data, context) => {
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
 
   if (isTeamLeader) {
-    const userDocRef = db.collection(COLLECTIONS.USERS).doc(teammateId);
-
     try {
-      const record = await userDocRef.get();
-  
-      if (!record.exists) {
-        return { error: { message: "Invalid user" } };
-      }
-  
-      user = record.data();
+        await teamDocRef.set({
+            roles: {
+                "officer": admin.firestore.FieldValue.delete(),
+            },
+        }, { merge: true });
     } catch (error) {
-      return { error };
-    }
-  
-    try {
-      await teamDocRef.set({
-          roles: {
-              [data.role]: {
-                  id: user.id,
-                  ref: userDocRef,
-              },
-          },
-      }, { merge: true });
-    } catch (error) {
-      return { error };
+        return { error };
     }
   } else {
     return { error: { message: "Invalid permissions" } };

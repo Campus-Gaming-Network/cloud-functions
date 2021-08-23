@@ -16,6 +16,7 @@ const createTeam = require("./onCall/createTeam");
 const joinTeam = require("./onCall/joinTeam");
 const leaveTeam = require("./onCall/leaveTeam");
 const promoteTeammate = require("./onCall/promoteTeammate");
+const demoteTeammate = require("./onCall/demoteTeammate");
 const kickTeammate = require("./onCall/kickTeammate");
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +58,7 @@ exports.createTeam = createTeam.createTeam;
 exports.joinTeam = joinTeam.joinTeam;
 exports.leaveTeam = leaveTeam.leaveTeam;
 exports.promoteTeammate = promoteTeammate.promoteTeammate;
+exports.demoteTeammate = demoteTeammate.demoteTeammate;
 exports.kickTeammate = kickTeammate.kickTeammate;
 exports.trackCreatedUpdated = trackCreatedUpdated.trackCreatedUpdated;
 exports.updateAlgoliaIndex = updateAlgoliaIndex.updateAlgoliaIndex;
