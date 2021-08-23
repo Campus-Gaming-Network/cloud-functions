@@ -14,6 +14,9 @@ const searchUsers = require("./onCall/searchUsers");
 const reportEntity = require("./onCall/reportEntity");
 const createTeam = require("./onCall/createTeam");
 const joinTeam = require("./onCall/joinTeam");
+const leaveTeam = require("./onCall/leaveTeam");
+const promoteTeammate = require("./onCall/promoteTeammate");
+const kickTeammate = require("./onCall/kickTeammate");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onWrite
@@ -52,6 +55,9 @@ exports.searchUsers = searchUsers.searchUsers;
 exports.reportEntity = reportEntity.reportEntity;
 exports.createTeam = createTeam.createTeam;
 exports.joinTeam = joinTeam.joinTeam;
+exports.leaveTeam = leaveTeam.leaveTeam;
+exports.promoteTeammate = promoteTeammate.promoteTeammate;
+exports.kickTeammate = kickTeammate.kickTeammate;
 exports.trackCreatedUpdated = trackCreatedUpdated.trackCreatedUpdated;
 exports.updateAlgoliaIndex = updateAlgoliaIndex.updateAlgoliaIndex;
 exports.updateEventResponsesOnEventUpdate =

@@ -26,9 +26,19 @@ const changeLog = (prev, curr) => `${prev} -> ${curr}`;
   
 const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-const isAuthenticated = context => Boolean(context?.auth?.uid);
+const isAuthenticated = context => (
+  Boolean(context) &&
+  Boolean(context.auth) &&
+  Boolean(context.auth.uid)
+);
 
-const hasVerifiedEmail = context => Boolean(context?.auth?.token?.firebase?.email_verified);
+const hasVerifiedEmail = context => (
+  Boolean(context) &&
+  Boolean(context.auth) &&
+  Boolean(context.auth.token) &&
+  Boolean(context.auth.token.firebase) &&
+  Boolean(context.auth.token.firebase.email_verified)
+);
 
 const hashPassword = async (password) => await bcrypt.hash(password, SALT_ROUNDS);
 
