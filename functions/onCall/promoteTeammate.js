@@ -45,7 +45,7 @@ exports.promoteTeammate = functions.https.onCall(async (data, context) => {
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
 
   if (isTeamLeader) {
-    const userDocRef = db.collection(COLLECTIONS.USERS).doc(teammateId);
+    const userDocRef = db.collection(COLLECTIONS.USERS).doc(data.teammateId);
 
     try {
       const record = await userDocRef.get();

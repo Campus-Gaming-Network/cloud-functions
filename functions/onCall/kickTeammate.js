@@ -44,7 +44,7 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
   );
 
   if (isTeamLeader || isTeamOfficer) {
-      const userDocRef = db.collection(COLLECTIONS.USERS).doc(teammateId);
+      const userDocRef = db.collection(COLLECTIONS.USERS).doc(data.teammateId);
 
       try {
         const teammatesSnapshot = await db
