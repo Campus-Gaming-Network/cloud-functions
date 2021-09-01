@@ -13,30 +13,21 @@ exports.teammateOnDelete = functions.firestore
     //
     ////////////////////////////////////////////////////////////////////////////////
 
-    console.log('snapshot.exists', snapshot.exists)
-
     if (snapshot.exists) {
       const deletedData = snapshot.data();
+      const teamRef = db.collection(COLLECTIONS.TEAMS).doc(deletedData.team.id);
 
-      console.log('deletedData', deletedData)
+      return teamRef
+        .set(
+          { memberCount: admin.firestore.FieldValue.increment(-1) },
+          { merge: true }
+        )
+        .catch((err) => {
+          console.log(err);
+          return false;
+        });
 
-      if (deletedData) {
-        console.log('deletedData.team.id', deletedData.team.id)
-        const teamRef = db.collection(COLLECTIONS.TEAMS).doc(deletedData.team.id);
-
-        if (teamRef.exists) {
-            return teamRef
-              .set(
-                { memberCount: admin.firestore.FieldValue.increment(-1) },
-                { merge: true }
-              )
-              .catch((err) => {
-                console.log(err);
-                return false;
-              });
-        }
-
-        return null;
-      }
     }
+
+    return null;
   });
