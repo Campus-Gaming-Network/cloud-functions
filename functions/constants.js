@@ -14,6 +14,7 @@ const COLLECTIONS = {
     TEAMS: "teams",
     TEAMS_AUTH: "teams-auth",
     TEAMMATES: "teammates",
+    TOURNAMENTS: "tournaments",
 };
 const DOCUMENT_PATHS = {
     USER: "users/{userId}",
@@ -21,6 +22,7 @@ const DOCUMENT_PATHS = {
     EVENT_RESPONSES: "event-responses/{eventResponseId}",
     TEAM: "teams/{teamId}",
     TEAMMATES: "teammates/{teammatesId}",
+    TOURNAMENTS: "tournaments/{tournamentId}",
 };
 
 // Algolia
@@ -33,6 +35,9 @@ const ALGOLIA_SCHOOLS_COLLECTION = process.env.GCLOUD_PROJECT === PRODUCTION_GCL
 const IGDB_CLIENT_ID = functions.config().igdb.client_id;
 const IGDB_CLIENT_SECRET = functions.config().igdb.client_secret;
 const IGDB_GRANT_TYPE = "client_credentials";
+
+// Challonge
+const CHALLONGE_API_KEY = functions.config().challonge.api_key;
 
 // Discord
 const DISCORD_WEBHOOK_URL = functions.config().discord.webhook_url;
@@ -66,4 +71,5 @@ module.exports = {
     NANO_ID_LENGTH,
     SALT_ROUNDS,
     TEAM_ROLES,
+    CHALLONGE_API_KEY,
 };

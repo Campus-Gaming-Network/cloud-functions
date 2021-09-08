@@ -18,6 +18,7 @@ const leaveTeam = require("./onCall/leaveTeam");
 const promoteTeammate = require("./onCall/promoteTeammate");
 const demoteTeammate = require("./onCall/demoteTeammate");
 const kickTeammate = require("./onCall/kickTeammate");
+const createTournament = require("./onCall/createTournament");
 
 ////////////////////////////////////////////////////////////////////////////////
 // onWrite
@@ -60,6 +61,7 @@ exports.leaveTeam = leaveTeam.leaveTeam;
 exports.promoteTeammate = promoteTeammate.promoteTeammate;
 exports.demoteTeammate = demoteTeammate.demoteTeammate;
 exports.kickTeammate = kickTeammate.kickTeammate;
+exports.createTournament = createTournament.createTournament;
 exports.trackCreatedUpdated = trackCreatedUpdated.trackCreatedUpdated;
 exports.updateAlgoliaIndex = updateAlgoliaIndex.updateAlgoliaIndex;
 exports.updateEventResponsesOnEventUpdate =
