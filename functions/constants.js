@@ -15,6 +15,7 @@ const COLLECTIONS = {
     TEAMS_AUTH: "teams-auth",
     TEAMMATES: "teammates",
     TOURNAMENTS: "tournaments",
+    TOURNAMENT_USER: "tournament-user",
 };
 const DOCUMENT_PATHS = {
     USER: "users/{userId}",
@@ -23,6 +24,7 @@ const DOCUMENT_PATHS = {
     TEAM: "teams/{teamId}",
     TEAMMATES: "teammates/{teammatesId}",
     TOURNAMENTS: "tournaments/{tournamentId}",
+    TOURNAMENT_USER: "tournament-user/{tournamentUserId}",
 };
 
 // Algolia

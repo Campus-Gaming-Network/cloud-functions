@@ -53,7 +53,6 @@ exports.createTournament = functions.https.onCall(async (data, context) => {
       },
     });
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       error,

@@ -1,6 +1,6 @@
 const { db, functions } = require("../firebase");
 const { COLLECTIONS } = require("../constants");
-const { isAuthenticated, hashPassword } = require("../utils");
+const { isAuthenticated, hashPassword, hasVerifiedEmail } = require("../utils");
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTeam
