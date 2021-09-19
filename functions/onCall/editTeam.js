@@ -5,8 +5,16 @@ const { isAuthenticated, hashPassword, hasVerifiedEmail } = require("../utils");
 ////////////////////////////////////////////////////////////////////////////////
 // editTeam
 exports.editTeam = functions.https.onCall(async (data, context) => {
-  if (!isAuthenticated(context) || !data || !hasVerifiedEmail(context)) {
+  if (!data) {
     return { error: { message: "Invalid request" } };
+  }
+
+  if (!isAuthenticated(context)) {
+    return { error: { message: "Account required" } };
+  }
+
+  if (!hasVerifiedEmail(context)) {
+    return { error: { message: "Email verification required" } };
   }
 
   if (!data.teamId) {

@@ -36,8 +36,7 @@ const hasVerifiedEmail = context => (
   Boolean(context) &&
   Boolean(context.auth) &&
   Boolean(context.auth.token) &&
-  Boolean(context.auth.token.firebase) &&
-  Boolean(context.auth.token.firebase.email_verified)
+  Boolean(context.auth.token.email_verified)
 );
 
 const hashPassword = async (password) => await bcrypt.hash(password, SALT_ROUNDS);
