@@ -17,16 +17,17 @@ exports.teammateOnDelete = functions.firestore
       const deletedData = snapshot.data();
       const teamRef = db.collection(COLLECTIONS.TEAMS).doc(deletedData.team.id);
 
-      return teamRef
-        .set(
-          { memberCount: admin.firestore.FieldValue.increment(-1) },
-          { merge: true }
-        )
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
-
+      if (teamRef.exists) {
+        return teamRef
+          .set(
+            { memberCount: admin.firestore.FieldValue.increment(-1) },
+            { merge: true }
+          )
+          .catch((err) => {
+            console.log(err);
+            return false;
+          });
+      }
     }
 
     return null;

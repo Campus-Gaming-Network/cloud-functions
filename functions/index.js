@@ -32,6 +32,7 @@ const updateEventResponsesOnEventUpdate = require("./onUpdate/updateEventRespons
 const updateEventResponsesOnSchoolUpdate = require("./onUpdate/updateEventResponsesOnSchoolUpdate");
 const updateEventResponsesOnUserUpdate = require("./onUpdate/updateEventResponsesOnUserUpdate");
 const updateTeammatesOnUserUpdate = require("./onUpdate/updateTeammatesOnUserUpdate");
+const updateTeammatesOnTeamUpdate = require("./onUpdate/updateTeammatesOnTeamUpdate");
 const eventResponsesOnUpdated = require("./onUpdate/eventResponsesOnUpdated");
 const updateSchoolUserCountOnUserUpdate = require("./onUpdate/updateSchoolUserCountOnUserUpdate");
 
@@ -73,6 +74,7 @@ exports.updateEventResponsesOnSchoolUpdate =
 exports.updateEventResponsesOnUserUpdate =
   updateEventResponsesOnUserUpdate.updateEventResponsesOnUserUpdate;
 exports.updateTeammatesOnUserUpdate = updateTeammatesOnUserUpdate.updateTeammatesOnUserUpdate;
+exports.updateTeammatesOnTeamUpdate = updateTeammatesOnTeamUpdate.updateTeammatesOnTeamUpdate;
 exports.eventResponsesOnUpdated =
   eventResponsesOnUpdated.eventResponsesOnUpdated;
 exports.updateSchoolUserCountOnUserUpdate = updateSchoolUserCountOnUserUpdate.updateSchoolUserCountOnUserUpdate;
