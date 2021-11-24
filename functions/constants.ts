@@ -63,6 +63,31 @@ export const DOCUMENT_PATHS: DocumentPaths = {
     TOURNAMENTS: "tournaments/{tournamentId}",
     TOURNAMENT_USER: "tournament-user/{tournamentUserId}",
 };
+type QueryOperator = "<" | "<=" | "==" | ">" | ">=" | "!=" | "array-contains" | "array-contains-any" | "in" | "not-in";
+interface QueryOperators  {
+    LESS_THAN: QueryOperator;
+    LESS_THAN_EQUAL_TO: QueryOperator;
+    EQUAL_TO: QueryOperator;
+    GREATER_THAN: QueryOperator;
+    GREATER_THAN_EQUAL_TO: QueryOperator;
+    NOT_EQUAL_TO: QueryOperator;
+    ARRAY_CONTAINS: QueryOperator;
+    ARRAY_CONTAINS_ANY: QueryOperator;
+    IN: QueryOperator;
+    NOT_IN: QueryOperator;
+}
+export const QUERY_OPERATORS: QueryOperators = {
+    LESS_THAN: "<",
+    LESS_THAN_EQUAL_TO: "<=",
+    EQUAL_TO: "==",
+    GREATER_THAN: ">",
+    GREATER_THAN_EQUAL_TO: ">=",
+    NOT_EQUAL_TO: "!=",
+    ARRAY_CONTAINS: "array-contains",
+    ARRAY_CONTAINS_ANY: "array-contains-any",
+    IN: "in",
+    NOT_IN: "not-in",
+}
 
 // Algolia
 export const ALGOLIA_ID: string = functions.config().algolia.app;

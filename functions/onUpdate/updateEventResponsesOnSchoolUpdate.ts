@@ -1,6 +1,6 @@
 import { db, functions } from "../firebase";
 import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnSchoolUpdate
@@ -31,7 +31,7 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
         .doc(context.params.schoolId);
       const eventResponsesQuery = db
         .collection(COLLECTIONS.EVENT_RESPONSES)
-        .where("school.ref", "==", schoolDocRef);
+        .where("school.ref", QUERY_OPERATORS.EQUAL_TO, schoolDocRef);
 
       console.log(
         `School updated ${context.params.schoolId} updated: ${changes.join(

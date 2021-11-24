@@ -1,5 +1,5 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES } from "../constants";
+import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from "../constants";
 
 const PARTICIPANT_TYPES = [
     "user",
@@ -54,8 +54,8 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
   try {
     const tournamentUsersSnapshot = await db
       .collection(COLLECTIONS.TOURNAMENT_USER)
-      .where("user.ref", "==", userDocRef)
-      .where("tournament.ref", "==", tournamentDocRef)
+      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef)
+      .where("tournament.ref", QUERY_OPERATORS.EQUAL_TO, tournamentDocRef)
       .get();
 
     if (!tournamentUsersSnapshot.empty) {

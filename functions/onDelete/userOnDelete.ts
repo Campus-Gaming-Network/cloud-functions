@@ -1,5 +1,5 @@
 import { auth, db, admin, functions } from "../firebase";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // userOnDelete
@@ -22,13 +22,13 @@ exports.userOnDelete = functions.firestore
     const schoolDocRef = db.collection(COLLECTIONS.SCHOOLS).doc(userData.school.id);
     const eventsQuery = db
       .collection(COLLECTIONS.EVENTS)
-      .where("creator", "==", userDocRef);
+      .where("creator", QUERY_OPERATORS.EQUAL_TO, userDocRef);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
-      .where("user.ref", "==", userDocRef);
+      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
     const teammatesQuery = db
       .collection(COLLECTIONS.TEAMMATES)
-      .where("user.ref", "==", userDocRef);
+      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
     schoolDocRef.set({ userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true }).catch((err) => {
       console.log(err);

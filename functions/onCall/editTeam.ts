@@ -1,5 +1,5 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from "../constants";
 import { hashPassword } from "../utils";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
     try {
       const teamsAuthSnapshot = await db
         .collection(COLLECTIONS.TEAMS_AUTH)
-        .where("team.ref", "==", teamDocRef)
+        .where("team.ref", QUERY_OPERATORS.EQUAL_TO, teamDocRef)
         .limit(1)
         .get();
   

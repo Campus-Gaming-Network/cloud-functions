@@ -1,5 +1,5 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventOnDelete
@@ -16,7 +16,7 @@ exports.eventOnDelete = functions.firestore
     const eventDocRef = db.collection(COLLECTIONS.EVENTS).doc(context.params.eventId);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
-      .where("event.ref", "==", eventDocRef);
+      .where("event.ref", QUERY_OPERATORS.EQUAL_TO, eventDocRef);
 
     return eventResponsesQuery
       .get()

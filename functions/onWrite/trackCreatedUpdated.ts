@@ -26,9 +26,10 @@ exports.trackCreatedUpdated = functions.firestore
       COLLECTIONS.REPORTS,
       COLLECTIONS.TEAMS,
       COLLECTIONS.TEAMS_AUTH,
+      COLLECTIONS.TEAMMATES,
     ];
 
-    if (setCols.indexOf(context.params.colId) === -1) {
+    if (!setCols.includes(context.params.colId)) {
       return;
     }
 

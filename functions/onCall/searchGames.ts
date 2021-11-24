@@ -136,7 +136,7 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
       try {
         await db
           .collection(COLLECTIONS.CONFIGS)
-          .doc("igdb")
+          .doc(STATIC_DOCS.IGDB)
           .set(
             {
               accessToken: authResponse.access_token,

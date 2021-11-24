@@ -1,5 +1,5 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // teamOnDelete
@@ -19,10 +19,10 @@ exports.teamOnDelete = functions.firestore
     const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(context.params.teamId);
     const teamsAuthResponsesQuery = db
       .collection(COLLECTIONS.TEAMS_AUTH)
-      .where("team.ref", "==", teamDocRef);
+      .where("team.ref", QUERY_OPERATORS.EQUAL_TO, teamDocRef);
     const teammatesResponsesQuery = db
       .collection(COLLECTIONS.TEAMMATES)
-      .where("team.ref", "==", teamDocRef);
+      .where("team.ref", QUERY_OPERATORS.EQUAL_TO, teamDocRef);
 
     const teamsAuthSnapshot = await teamsAuthResponsesQuery.get();
     const teammatesSnapshot = await teammatesResponsesQuery.get();

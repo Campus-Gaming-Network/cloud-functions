@@ -1,6 +1,6 @@
 import { db, functions } from "../firebase";
 import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateTeammatesOnUserUpdate
@@ -44,7 +44,7 @@ exports.updateTeammatesOnUserUpdate = functions.firestore
       const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
       const teammtesQuery = db
         .collection(COLLECTIONS.TEAMMATES)
-        .where("user.ref", "==", userDocRef);
+        .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
       console.log(
         `User updated ${context.params.userId} updated: ${changes.join(", ")}`

@@ -1,5 +1,5 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, TEAM_ROLES, FUNCTIONS_ERROR_CODES } from "../constants";
+import { COLLECTIONS, TEAM_ROLES, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // kickTeammate
@@ -54,8 +54,8 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
       try {
         const teammatesSnapshot = await db
           .collection(COLLECTIONS.TEAMMATES)
-          .where("user.ref", "==", userDocRef)
-          .where("team.ref", "==", teamDocRef)
+          .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef)
+          .where("team.ref", QUERY_OPERATORS.EQUAL_TO, teamDocRef)
           .limit(1)
           .get();
     
