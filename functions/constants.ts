@@ -4,19 +4,20 @@ import { functions } from "./firebase";
 export const PRODUCTION_GCLOUD_PROJECT: string = "campusgamingnetwork-b2128";
 
 // Firestore
+type Collection = "schools" | "users" | "events" | "event-responses" | "game-queries" | "configs" | "reports" | "teams" | "teams-auth" | "teammates" | "tournaments" | "tournament-user";
 interface Collections {
-    SCHOOLS: string;
-    USERS: string;
-    EVENTS: string;
-    EVENT_RESPONSES: string;
-    GAME_QUERIES: string;
-    CONFIGS: string;
-    REPORTS: string;
-    TEAMS: string;
-    TEAMS_AUTH: string;
-    TEAMMATES: string;
-    TOURNAMENTS: string;
-    TOURNAMENT_USER: string;
+    SCHOOLS: Collection;
+    USERS: Collection;
+    EVENTS: Collection;
+    EVENT_RESPONSES: Collection;
+    GAME_QUERIES: Collection;
+    CONFIGS: Collection;
+    REPORTS: Collection;
+    TEAMS: Collection;
+    TEAMS_AUTH: Collection;
+    TEAMMATES: Collection;
+    TOURNAMENTS: Collection;
+    TOURNAMENT_USER: Collection;
 }
 export const COLLECTIONS: Collections = {
     SCHOOLS: "schools",
@@ -32,33 +33,35 @@ export const COLLECTIONS: Collections = {
     TOURNAMENTS: "tournaments",
     TOURNAMENT_USER: "tournament-user",
 };
+type StaticDoc = "igdb";
 interface StaticDocs {
-    IGDB: string;
+    IGDB: StaticDoc;
 }
 export const STATIC_DOCS: StaticDocs = {
     IGDB: "igdb",
 };
+type DocumentPath = "{colId}/{docId}" | "users/{userId}" | "schools/{schoolId}" | "events/{eventId}" | "event-responses/{eventResponseId}" | "teams/{teamId}" | "teammates/{teammatesId}" | "tournaments/{tournamentId}" | "tournament-user/{tournamentUserId}";
 interface DocumentPaths {
-    "WILDCARD": string;
-    "USER": string;
-    "SCHOOL": string;
-    "EVENT": string;
-    "EVENT_RESPONSES": string;
-    "TEAM": string;
-    "TEAMMATES": string;
-    "TOURNAMENTS": string;
-    "TOURNAMENT_USER": string;
+    WILDCARD: DocumentPath;
+    USER: DocumentPath;
+    SCHOOL: DocumentPath;
+    EVENT: DocumentPath;
+    EVENT_RESPONSES: DocumentPath;
+    TEAM: DocumentPath;
+    TEAMMATES: DocumentPath;
+    TOURNAMENTS: DocumentPath;
+    TOURNAMENT_USER: DocumentPath;
 }
 export const DOCUMENT_PATHS: DocumentPaths = {
     WILDCARD: "{colId}/{docId}",
-    "USER": "users/{userId}",
-    "SCHOOL": "schools/{schoolId}",
-    "EVENT": "events/{eventId}",
-    "EVENT_RESPONSES": "event-responses/{eventResponseId}",
-    "TEAM": "teams/{teamId}",
-    "TEAMMATES": "teammates/{teammatesId}",
-    "TOURNAMENTS": "tournaments/{tournamentId}",
-    "TOURNAMENT_USER": "tournament-user/{tournamentUserId}",
+    USER: "users/{userId}",
+    SCHOOL: "schools/{schoolId}",
+    EVENT: "events/{eventId}",
+    EVENT_RESPONSES: "event-responses/{eventResponseId}",
+    TEAM: "teams/{teamId}",
+    TEAMMATES: "teammates/{teammatesId}",
+    TOURNAMENTS: "tournaments/{tournamentId}",
+    TOURNAMENT_USER: "tournament-user/{tournamentUserId}",
 };
 
 // Algolia
@@ -86,15 +89,16 @@ export const NANO_ID_LENGTH: number = 10;
 export const SALT_ROUNDS: number = 10;
 
 // Other
+type TeamRoleType = "leader" | "officer";
 interface TeamRoleTypes {
-    LEADER: string;
-    OFFICER: string;    
+    LEADER: TeamRoleType;
+    OFFICER: TeamRoleType;
 }
 export const TEAM_ROLE_TYPES: TeamRoleTypes = {
     LEADER: "leader",
     OFFICER: "officer",
 };
-export const TEAM_ROLES: string[] = Object.values(TEAM_ROLE_TYPES);
+export const TEAM_ROLES: TeamRoleType[] = Object.values(TEAM_ROLE_TYPES);
 
 interface FunctionsErrorCodes {
     OK: FunctionsErrorCode;

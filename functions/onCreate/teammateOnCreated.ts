@@ -17,15 +17,10 @@ exports.teammateOnCreated = functions.firestore
       const teammateResponseData = snapshot.data();
       const teamRef = db.collection(COLLECTIONS.TEAMS).doc(teammateResponseData.team.id);
 
-      return teamRef
-        .set(
-          { memberCount: admin.firestore.FieldValue.increment(1) },
-          { merge: true }
-        )
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
+      return teamRef.set(
+        { memberCount: admin.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
     }
 
     return null;

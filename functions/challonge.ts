@@ -1,6 +1,53 @@
 export const CHALLONGE_API_URL: string = "https://api.challonge.com/v1/";
 
-export const CHALLONGE_PARAMS: { [key: string]: any } = {
+interface ChallongeParams {
+    TOURNAMENT: {
+        CREATE: {
+            API_KEY: string;
+            NAME: string;
+            TOURNAMENT_TYPE: string;
+            URL: string;
+            SUBDOMAIN: string;
+            DESCRIPTION: string;
+            OPEN_SIGNUP: string;
+            HOLD_THIRD_PLACE_MATCH: string;
+            PTS_FOR_MATCH_WIN: string;
+            PTS_FOR_MATCH_TIE: string;
+            PTS_FOR_GAME_WIN: string;
+            PTS_FOR_GAME_TIE: string;
+            PTS_FOR_BYE: string;
+            SWISS_ROUNDS: string;
+            RANKED_BY: string;
+            RR_PTS_FOR_MATCH_WIN: string;
+            RR_PTS_FOR_MATCH_TIE: string;
+            RR_PTS_FOR_GAME_WIN: string;
+            RR_PTS_FOR_GAME_TIE: string;
+            ACCEPT_ATTACHMENTS: string;
+            HIDE_FORUM: string;
+            SHOW_ROUNDS: string;
+            PRIVATE: string;
+            NOTIFY_USERS_WHEN_MATCHES_OPEN: string;
+            NOTIFY_USERS_WHEN_THE_TOURNAMENT_ENDS: string;
+            SEQUENTIAL_PAIRINGS: string;
+            SIGNUP_CAP: string;
+            START_AT: string;
+            CHECK_IN_DURATION: string;
+            GRAND_FINALS_MODIFIER: string;
+        },
+    },
+    PARTICIPANT: {
+        CREATE: {
+            API_KEY: string;
+            TOURNAMENT: string;
+            NAME: string;
+            CHALLONGE_USERNAME: string;
+            EMAIL: string;
+            SEED: string;
+            MISC: string;
+        },
+    },    
+}
+export const CHALLONGE_PARAMS: ChallongeParams = {
     TOURNAMENT: {
         CREATE: {
             API_KEY: "api_key",

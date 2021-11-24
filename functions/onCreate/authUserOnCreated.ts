@@ -16,9 +16,8 @@ exports.authUserOnCreated = functions.auth.user().onCreate(async (user) => {
           },
         });
       } catch (error) {
-        console.log(error);
-        return null;
+        return;
       }
 
-      return null;
+      return;
 });
