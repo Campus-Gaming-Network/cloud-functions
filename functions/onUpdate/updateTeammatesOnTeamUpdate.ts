@@ -1,11 +1,11 @@
 import { db, functions } from "../firebase";
 import { changeLog } from "../utils";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateTeammatesOnTeamUpdate
 exports.updateTeammatesOnTeamUpdate = functions.firestore
-  .document("teams/{teamId}")
+  .document(DOCUMENT_PATHS.TEAM)
   .onUpdate((change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

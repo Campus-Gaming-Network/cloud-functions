@@ -125,5 +125,5 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError(error.code, error.message);
   }
 
-  return { teamId: team.id };
+  return { success: true, teamId: team.id };
 });

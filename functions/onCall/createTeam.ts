@@ -119,5 +119,5 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError(error.code, error.message);
   }
 
-  return { teamId: teamDocRef.id };
+  return { success: true, teamId: teamDocRef.id };
 });

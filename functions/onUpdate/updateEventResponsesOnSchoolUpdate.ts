@@ -1,11 +1,11 @@
 import { db, functions } from "../firebase";
 import { changeLog } from "../utils";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnSchoolUpdate
 exports.updateEventResponsesOnSchoolUpdate = functions.firestore
-  .document("schools/{schoolId}")
+  .document(DOCUMENT_PATHS.SCHOOL)
   .onUpdate((change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

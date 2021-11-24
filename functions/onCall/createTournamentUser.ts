@@ -48,7 +48,7 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
   }
 
   if (!user) {
-    return { error: { message: "Invalid user" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
   }
 
   try {
@@ -59,7 +59,7 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
       .get();
 
     if (!tournamentUsersSnapshot.empty) {
-      return { error: { message: "Already joined tournament" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.ALREADY_EXISTS, 'Already joined tournament');
     }
   } catch (error: any) {
     throw new functions.https.HttpsError(error.code, error.message);

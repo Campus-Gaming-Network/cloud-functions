@@ -1,11 +1,11 @@
 import { db, functions } from "../firebase";
 import { shallowEqual, changeLog } from "../utils";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnEventUpdate
 exports.updateEventResponsesOnEventUpdate = functions.firestore
-  .document("events/{eventId}")
+  .document(DOCUMENT_PATHS.EVENT)
   .onUpdate((change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

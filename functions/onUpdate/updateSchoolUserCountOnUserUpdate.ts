@@ -1,10 +1,10 @@
 import { admin, db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateSchoolUserCountOnUserUpdate
 exports.updateSchoolUserCountOnUserUpdate = functions.firestore
-  .document("users/{userId}")
+  .document(DOCUMENT_PATHS.USER)
   .onUpdate((change) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

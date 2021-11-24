@@ -1,10 +1,10 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventOnDelete
 exports.eventOnDelete = functions.firestore
-  .document("events/{eventId}")
+  .document(DOCUMENT_PATHS.EVENT)
   .onDelete((snapshot, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

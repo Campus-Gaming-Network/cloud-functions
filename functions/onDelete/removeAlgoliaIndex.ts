@@ -1,10 +1,11 @@
 import { functions } from "../firebase";
 import { algoliaAdminIndex } from "../algolia";
+import { DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // removeAlgoliaIndex
 exports.removeAlgoliaIndex = functions.firestore
-  .document("schools/{schoolId}")
+  .document(DOCUMENT_PATHS.SCHOOL)
   .onDelete((snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

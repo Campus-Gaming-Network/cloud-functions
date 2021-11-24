@@ -1,5 +1,5 @@
 import { admin, db, functions } from "../firebase";
-import { IGDB_CLIENT_ID, IGDB_CLIENT_SECRET, IGDB_GRANT_TYPE, COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
+import { STATIC_DOCS, IGDB_CLIENT_ID, IGDB_CLIENT_SECRET, IGDB_GRANT_TYPE, COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 
 import * as rp from "request-promise";
 import { DateTime } from "luxon";
@@ -7,10 +7,6 @@ import { DateTime } from "luxon";
 ////////////////////////////////////////////////////////////////////////////////
 // searchGames
 exports.searchGames = functions.https.onCall(async (data, context) => {
-  if (!data || !context) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
-  }
-
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Searches IGDB for games matching search query.
@@ -36,11 +32,17 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
   //
   ////////////////////////////////////////////////////////////////////////////////
 
-  if (!IGDB_CLIENT_ID || !IGDB_CLIENT_SECRET || !IGDB_GRANT_TYPE) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INTERNAL, 'Invalid request');
+  if (
+    !data ||
+    !context ||
+    !IGDB_CLIENT_ID ||
+    !IGDB_CLIENT_SECRET ||
+    !IGDB_GRANT_TYPE
+  ) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
-  const configsQueryRef = db.collection(COLLECTIONS.CONFIGS).doc("igdb");
+  const configsQueryRef = db.collection(COLLECTIONS.CONFIGS).doc(STATIC_DOCS.IGDB);
   const gameQueryRef = db.collection(COLLECTIONS.GAME_QUERIES).doc(data.query);
 
   let tokenStatus = "READY";
@@ -155,7 +157,7 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
   }
 
   if (!accessToken) {
-    return { success: false, error: "Missing access token" };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Missing access token');
   }
 
   try {
@@ -202,5 +204,5 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
     };
   }
 
-  return { success: false };
+  throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, 'Invalid request');
 });

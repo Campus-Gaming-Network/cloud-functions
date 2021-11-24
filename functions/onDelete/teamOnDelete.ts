@@ -1,10 +1,10 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // teamOnDelete
 exports.teamOnDelete = functions.firestore
-  .document("teams/{teamId}")
+  .document(DOCUMENT_PATHS.TEAM)
   .onDelete(async (snapshot, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

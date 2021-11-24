@@ -1,10 +1,10 @@
 import { admin, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // trackCreatedUpdated
 exports.trackCreatedUpdated = functions.firestore
-  .document("{colId}/{docId}")
+  .document(DOCUMENT_PATHS.WILDCARD)
   .onWrite(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
@@ -29,7 +29,7 @@ exports.trackCreatedUpdated = functions.firestore
     ];
 
     if (setCols.indexOf(context.params.colId) === -1) {
-      return null;
+      return;
     }
 
     const createDoc = change.after.exists && !change.before.exists;
@@ -37,7 +37,7 @@ exports.trackCreatedUpdated = functions.firestore
     const deleteDoc = change.before.exists && !change.after.exists;
 
     if (deleteDoc) {
-      return null;
+      return;
     }
 
     const after: any = change.after.exists ? change.after.data() : null;
@@ -58,31 +58,20 @@ exports.trackCreatedUpdated = functions.firestore
     };
 
     if (createDoc) {
-      return change.after.ref
-        .set(
-          {
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        )
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
+      return change.after.ref.set({
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        },
+        { merge: true }
+      );
     }
 
     if (updateDoc && canUpdate()) {
-      return change.after.ref
-        .set(
-          { updatedAt: admin.firestore.FieldValue.serverTimestamp() },
-          { merge: true }
-        )
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
+      return change.after.ref.set(
+        { updatedAt: admin.firestore.FieldValue.serverTimestamp() },
+        { merge: true }
+      );
     }
 
-    return null;
+    return;
   });

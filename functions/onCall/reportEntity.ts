@@ -48,5 +48,5 @@ exports.reportEntity = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError(error.code, error.message);
   }
 
-  return;
+  return { success: true };
 });

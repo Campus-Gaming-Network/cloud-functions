@@ -1,10 +1,10 @@
 import { admin, db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnCreated
 exports.eventResponsesOnCreated = functions.firestore
-  .document("event-responses/{eventResponseId}")
+  .document(DOCUMENT_PATHS.EVENT_RESPONSES)
   .onCreate((snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

@@ -1,10 +1,11 @@
 import { functions } from "../firebase";
 import { algoliaAdminIndex } from "../algolia";
+import { DOCUMENT_PATHS } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // addAlgoliaIndex
 exports.addAlgoliaIndex = functions.firestore
-  .document("schools/{schoolId}")
+  .document(DOCUMENT_PATHS.SCHOOL)
   .onCreate((snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////
     //

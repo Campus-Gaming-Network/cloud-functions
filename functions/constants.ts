@@ -4,7 +4,21 @@ import { functions } from "./firebase";
 export const PRODUCTION_GCLOUD_PROJECT: string = "campusgamingnetwork-b2128";
 
 // Firestore
-export const COLLECTIONS: { [key: string]: string } = {
+interface Collections {
+    SCHOOLS: string;
+    USERS: string;
+    EVENTS: string;
+    EVENT_RESPONSES: string;
+    GAME_QUERIES: string;
+    CONFIGS: string;
+    REPORTS: string;
+    TEAMS: string;
+    TEAMS_AUTH: string;
+    TEAMMATES: string;
+    TOURNAMENTS: string;
+    TOURNAMENT_USER: string;
+}
+export const COLLECTIONS: Collections = {
     SCHOOLS: "schools",
     USERS: "users",
     EVENTS: "events",
@@ -18,14 +32,33 @@ export const COLLECTIONS: { [key: string]: string } = {
     TOURNAMENTS: "tournaments",
     TOURNAMENT_USER: "tournament-user",
 };
-export const DOCUMENT_PATHS: { [key: string]: string } = {
-    USER: "users/{userId}",
-    SCHOOL: "schools/{schoolId}",
-    EVENT_RESPONSES: "event-responses/{eventResponseId}",
-    TEAM: "teams/{teamId}",
-    TEAMMATES: "teammates/{teammatesId}",
-    TOURNAMENTS: "tournaments/{tournamentId}",
-    TOURNAMENT_USER: "tournament-user/{tournamentUserId}",
+interface StaticDocs {
+    IGDB: string;
+}
+export const STATIC_DOCS: StaticDocs = {
+    IGDB: "igdb",
+};
+interface DocumentPaths {
+    "WILDCARD": string;
+    "USER": string;
+    "SCHOOL": string;
+    "EVENT": string;
+    "EVENT_RESPONSES": string;
+    "TEAM": string;
+    "TEAMMATES": string;
+    "TOURNAMENTS": string;
+    "TOURNAMENT_USER": string;
+}
+export const DOCUMENT_PATHS: DocumentPaths = {
+    WILDCARD: "{colId}/{docId}",
+    "USER": "users/{userId}",
+    "SCHOOL": "schools/{schoolId}",
+    "EVENT": "events/{eventId}",
+    "EVENT_RESPONSES": "event-responses/{eventResponseId}",
+    "TEAM": "teams/{teamId}",
+    "TEAMMATES": "teammates/{teammatesId}",
+    "TOURNAMENTS": "tournaments/{tournamentId}",
+    "TOURNAMENT_USER": "tournament-user/{tournamentUserId}",
 };
 
 // Algolia
@@ -53,13 +86,37 @@ export const NANO_ID_LENGTH: number = 10;
 export const SALT_ROUNDS: number = 10;
 
 // Other
-export const TEAM_ROLE_TYPES: { [key: string]: string } = {
+interface TeamRoleTypes {
+    LEADER: string;
+    OFFICER: string;    
+}
+export const TEAM_ROLE_TYPES: TeamRoleTypes = {
     LEADER: "leader",
     OFFICER: "officer",
 };
 export const TEAM_ROLES: string[] = Object.values(TEAM_ROLE_TYPES);
 
-export const FUNCTIONS_ERROR_CODES: { [key: string]: FunctionsErrorCode } = {
+interface FunctionsErrorCodes {
+    OK: FunctionsErrorCode;
+    CANCELLED: FunctionsErrorCode;
+    UNKNOWN: FunctionsErrorCode;
+    INVALID_ARGUMENT: FunctionsErrorCode;
+    DEADLINE_EXCEEDED: FunctionsErrorCode;
+    NOT_FOUND: FunctionsErrorCode;
+    ALREADY_EXISTS: FunctionsErrorCode;
+    PERMISSION_DENIED: FunctionsErrorCode;
+    RESOURCE_EXHAUSTED: FunctionsErrorCode;
+    FAILED_PRECONDITION: FunctionsErrorCode;
+    ABORTED: FunctionsErrorCode;
+    OUT_OF_RANGE: FunctionsErrorCode;
+    UNIMPLEMENTED: FunctionsErrorCode;
+    INTERNAL: FunctionsErrorCode;
+    UNAVAILABLE: FunctionsErrorCode;
+    DATA_LOSS: FunctionsErrorCode;
+    UNAUTHENTICATED: FunctionsErrorCode;
+}
+
+export const FUNCTIONS_ERROR_CODES: FunctionsErrorCodes = {
     OK: "ok",
     CANCELLED: "cancelled",
     UNKNOWN: "unknown",

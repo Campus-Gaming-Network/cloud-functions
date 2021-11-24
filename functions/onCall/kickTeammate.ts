@@ -66,7 +66,7 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError(error.code, error.message);
       }
   } else {
-    return { error: { message: "Invalid permissions" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   return { success: true };
