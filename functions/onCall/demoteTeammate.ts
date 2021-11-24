@@ -1,23 +1,23 @@
 import { admin, db, functions } from "../firebase";
-import { COLLECTIONS, TEAM_ROLES } from "../constants";
+import { COLLECTIONS, TEAM_ROLES, FUNCTIONS_ERROR_CODES } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // demoteTeammate
 exports.demoteTeammate = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    return { error: { message: "Team id required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
   }
 
   if (!data.teammateId || !data.teammateId.trim()) {
-    return { error: { message: "Teammate id required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate id required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -30,12 +30,12 @@ exports.demoteTeammate = functions.https.onCall(async (data, context) => {
     if (record.exists) {
       team = record.data();
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!team) {
-    return { error: { message: "Invalid team" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
@@ -47,11 +47,11 @@ exports.demoteTeammate = functions.https.onCall(async (data, context) => {
                 "officer": admin.firestore.FieldValue.delete(),
             },
         }, { merge: true });
-    } catch (error) {
-        return { error };
-    }
+      } catch (error: any) {
+        throw new functions.https.HttpsError(error.code, error.message);
+      }
   } else {
-    return { error: { message: "Invalid permissions" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   return { success: true };

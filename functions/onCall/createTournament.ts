@@ -1,23 +1,23 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, CHALLONGE_API_KEY } from "../constants";
+import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTournament
 exports.createTournament = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    return { error: { message: "Email verification required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
   }
 
   if (!data.name || !data.name.trim()) {
-    return { error: { message: "Tournament name required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Tournament name required');
   }
 
   let challongeResponse;
@@ -61,17 +61,11 @@ exports.createTournament = functions.https.onCall(async (data, context) => {
       },
     });
   } catch (error) {
-    return {
-      success: false,
-      error,
-    };
-}
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, "Challonge error");
+  }
 
 if (challongeResponse.errors) {
-    return {
-        success: false,
-        errors,
-    };
+  throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, challongeResponse.errors.join("; "));
 }
 
 let tournamentDocRef;
@@ -86,14 +80,14 @@ try {
       name: data.name,
       description: data.description,
   });
-} catch (error) {
-  return { error };
+} catch (error: any) {
+  throw new functions.https.HttpsError(error.code, error.message);
 }
 
 try {
   await tournamentDocRef.set({ id: tournamentDocRef.id }, { merge: true });
-} catch (error) {
-  return { error };
+} catch (error: any) {
+  throw new functions.https.HttpsError(error.code, error.message);
 }
    
   return { tournamentId: null };

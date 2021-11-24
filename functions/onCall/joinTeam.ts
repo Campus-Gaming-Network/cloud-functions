@@ -1,24 +1,24 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 import { comparePasswords } from "../utils";
 
 ////////////////////////////////////////////////////////////////////////////////
 // joinTeam
 exports.joinTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    return { error: { message: "Team id required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
   }
 
   if (!data.password || !data.password.trim()) {
-    return { error: { message: "Team password required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate password required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -34,22 +34,22 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
       .limit(1)
       .get();
 
-    if (teamsAuthSnapshot.empty) {
-      return { error: { message: "Invalid team" } };
+    if (!teamsAuthSnapshot.empty) {
+      teamAuth = teamsAuthSnapshot.docs[0].data();
     }
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
+  }
 
-    const doc = teamsAuthSnapshot.docs[0];
-
-    teamAuth = doc.data();
-  } catch (error) {
-    return { error };
+  if (!teamAuth) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
   }
 
   if (Boolean(teamAuth)) {
     const isValidPassword = await comparePasswords(data.password, teamAuth.joinHash);
 
     if (!isValidPassword) {
-      return { error: { message: "Invalid password" } };
+      throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Invalid password');
     }
   }
 
@@ -59,12 +59,12 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
     if (record.exists) {
       team = record.data();
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!team) {
-    return { error: { message: "Invalid team" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
 }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -72,17 +72,15 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   try {
     const record = await userDocRef.get();
 
-    if (!record.exists) {
-      return { error: { message: "Invalid user" } };
+    if (record.exists) {
+      user = record.data();
     }
-
-    user = record.data();
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!user) {
-    return { error: { message: "Invalid user" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid user');
   }
 
   try {
@@ -93,10 +91,10 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
       .get();
 
     if (!teammatesSnapshot.empty) {
-      return { error: { message: "Already joined team" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.ALREADY_EXISTS, 'Already joined team');
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   const teammateData = {
@@ -123,8 +121,8 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
 
   try {
     await db.collection(COLLECTIONS.TEAMMATES).add(teammateData);
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   return { teamId: team.id };

@@ -1,5 +1,5 @@
 import { admin, db, functions } from "../firebase";
-import { IGDB_CLIENT_ID, IGDB_CLIENT_SECRET, IGDB_GRANT_TYPE, COLLECTIONS } from "../constants";
+import { IGDB_CLIENT_ID, IGDB_CLIENT_SECRET, IGDB_GRANT_TYPE, COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 
 import * as rp from "request-promise";
 import { DateTime } from "luxon";
@@ -7,6 +7,10 @@ import { DateTime } from "luxon";
 ////////////////////////////////////////////////////////////////////////////////
 // searchGames
 exports.searchGames = functions.https.onCall(async (data, context) => {
+  if (!data || !context) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
+  }
+
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Searches IGDB for games matching search query.
@@ -32,16 +36,8 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
   //
   ////////////////////////////////////////////////////////////////////////////////
 
-  if (!IGDB_CLIENT_ID) {
-    return { success: false, error: "Missing client id" };
-  }
-
-  if (!IGDB_CLIENT_SECRET) {
-    return { success: false, error: "Missing client secret" };
-  }
-
-  if (!IGDB_GRANT_TYPE) {
-    return { success: false, error: "Missing grant type" };
+  if (!IGDB_CLIENT_ID || !IGDB_CLIENT_SECRET || !IGDB_GRANT_TYPE) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INTERNAL, 'Invalid request');
   }
 
   const configsQueryRef = db.collection(COLLECTIONS.CONFIGS).doc("igdb");
@@ -58,12 +54,8 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
   // See if we've made this same query before
   try {
     gameQueryDoc = await gameQueryRef.get();
-  } catch (error) {
-    console.log(error);
-    return {
-      success: false,
-      error,
-    };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   // Return what we have stored if weve made the query before
@@ -74,12 +66,8 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
         { queries: admin.firestore.FieldValue.increment(1) },
         { merge: true }
       );
-    } catch (error) {
-      console.log(error);
-      return {
-        success: false,
-        error,
-      };
+    } catch (error: any) {
+      throw new functions.https.HttpsError(error.code, error.message);
     }
 
     const gameQueryData = gameQueryDoc.data() || {};
@@ -94,13 +82,9 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
   // Check if we have a token already stored
   try {
     igdbConfigDoc = await configsQueryRef.get();
-  } catch (error) {
+  } catch (error: any) {
     tokenStatus = "ERROR";
-    console.log(error);
-    return {
-      success: false,
-      error,
-    };
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (igdbConfigDoc && igdbConfigDoc.exists) {
@@ -164,13 +148,9 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
             },
             { merge: true }
           );
-      } catch (error) {
-        console.log(error);
-        return {
-          success: false,
-          error,
-        };
-      }
+        } catch (error: any) {
+          throw new functions.https.HttpsError(error.code, error.message);
+        }
     }
   }
 
@@ -210,13 +190,9 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
             },
             { merge: true }
           );
-      } catch (error) {
-        console.log(error);
-        return {
-          success: false,
-          error,
-        };
-      }
+        } catch (error: any) {
+          throw new functions.https.HttpsError(error.code, error.message);
+        }
     }
 
     return {

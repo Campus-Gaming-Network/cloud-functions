@@ -1,23 +1,23 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // leaveTeam
 exports.leaveTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    return { error: { message: "Email verification required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    return { error: { message: "Team id required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -27,24 +27,22 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   try {
     const record = await teamDocRef.get();
 
-    if (!record.exists) {
-      return { error: { message: "Invalid team" } };
+    if (record.exists) {
+      team = record.data();
     }
-
-    team = record.data();
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!team) {
-    return { error: { message: "Invalid team" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
   const hasOtherMembers = team.memberCount > 1;
 
   if (isTeamLeader && hasOtherMembers) {
-    return { error: { message: "You must assign a new leader before leaving the team." } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'You must assign a new leader before leaving the team');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -60,8 +58,8 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
     if (!teammatesSnapshot.empty) {
       teammatesSnapshot.docs[0].ref.delete();
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   return { success: true };

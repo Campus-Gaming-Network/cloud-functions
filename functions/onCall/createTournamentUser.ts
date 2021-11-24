@@ -1,5 +1,5 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, CHALLONGE_API_KEY } from "../constants";
+import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES } from "../constants";
 
 const PARTICIPANT_TYPES = [
     "user",
@@ -10,27 +10,27 @@ const PARTICIPANT_TYPES = [
 // createTournamentParticipant
 exports.createTournamentParticipant = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    return { error: { message: "Email verification required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
   }
 
   if (!data.tournamentId || !data.tournamentId.trim()) {
-    return { error: { message: "Tournament id required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Tournament id required');
   }
 
   if (!data.participantType || !data.participantType.trim()) {
-    return { error: { message: "Participant type is required." } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Participant type is required');
   }
 
   if (!PARTICIPANT_TYPES.includes(data.participantType)) {
-    return { error: { message: "Invalid participant type." } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Invalid participant type');
   }
 
   let user;
@@ -43,9 +43,8 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
     if (record.exists) {
       user = record.data();
     }
-
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!user) {
@@ -62,8 +61,8 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
     if (!tournamentUsersSnapshot.empty) {
       return { error: { message: "Already joined tournament" } };
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   let challongeResponse;
@@ -118,14 +117,14 @@ try {
       name: data.name,
       description: data.description,
   });
-} catch (error) {
-  return { error };
+} catch (error: any) {
+  throw new functions.https.HttpsError(error.code, error.message);
 }
 
 try {
   await tournamentUserDocRef.set({ id: tournamentUserDocRef.id }, { merge: true });
-} catch (error) {
-  return { error };
+} catch (error: any) {
+  throw new functions.https.HttpsError(error.code, error.message);
 }
    
   return { tournamentId: null };

@@ -39,8 +39,7 @@ exports.searchUsers = functions.https.onCall(async (data, context) => {
       authUser: authRecord,
       docUser: record && record.exists ? record.data() : null,
     };
-  } catch (error) {
-    console.log(error);
-    return error;
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 });

@@ -1,28 +1,28 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 import { hashPassword } from "../utils";
 
 ////////////////////////////////////////////////////////////////////////////////
 // editTeam
 exports.editTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    return { error: { message: "Email verification required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
   }
 
   if (!data.teamId) {
-    return { error: { message: "Team id required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
   }
 
   if (!data.name || !data.name.trim()) {
-    return { error: { message: "Team name required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -35,16 +35,16 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
     if (teamRecord.exists) {
       team = teamRecord.data();
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!team) {
-    return { error: { message: "Invalid team" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid team');
   }
 
   if (team.roles.leader.id !== context.auth.uid) {
-    return { error: { message: "Invalid permissions" }};
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   const name = data.name ? data.name.trim() : data.name;
@@ -59,8 +59,8 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
       description,
       website,
     }, { merge: true });
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (Boolean(data.password) && Boolean(data.password.trim())) {
@@ -73,21 +73,23 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
         .limit(1)
         .get();
   
-      if (teamsAuthSnapshot.empty) {
-        return { error: { message: "Invalid team auth" } };
+      if (!teamsAuthSnapshot.empty) {
+        teamsAuthDocRef = teamsAuthSnapshot.docs[0];
       }
-  
-      teamsAuthDocRef = teamsAuthSnapshot.docs[0];
-    } catch (error) {
-      return { error };
+    } catch (error: any) {
+      throw new functions.https.HttpsError(error.code, error.message);
+    }
+
+    if (!teamsAuthDocRef) {
+      throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
     }
 
     const joinHash = await hashPassword(data.password.trim());
 
     try {
         await teamsAuthDocRef.set({ joinHash }, { merge: true });
-      } catch (error) {
-        return { error };
+      } catch (error: any) {
+        throw new functions.https.HttpsError(error.code, error.message);
       }
   }
 

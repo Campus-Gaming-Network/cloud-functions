@@ -1,28 +1,28 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 import { hashPassword } from "../utils";
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTeam
 exports.createTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    return { error: { message: "Email verification required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
   }
 
   if (!data.name || !data.name.trim()) {
-    return { error: { message: "Team name required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
   }
 
   if (!data.password || !data.password.trim()) {
-    return { error: { message: "Team password required" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password required');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -35,12 +35,12 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
     if (userRecord.exists) {
       user = userRecord.data();
     }
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   if (!user) {
-    return { error: { message: "Invalid user" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
   }
 
   const shortName = data.shortName ? data.shortName.trim() : data.shortName;
@@ -65,14 +65,14 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
 
   try {
     teamDocRef = await db.collection(COLLECTIONS.TEAMS).add(teamData);
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   try {
     await teamDocRef.set({ id: teamDocRef.id }, { merge: true });
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   const teammateData = {
@@ -99,8 +99,8 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
 
   try {
     await db.collection(COLLECTIONS.TEAMMATES).add(teammateData);
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   const joinHash = await hashPassword(data.password.trim());
@@ -115,8 +115,8 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
 
   try {
     await db.collection(COLLECTIONS.TEAMS_AUTH).add(teamsAuthData);
-  } catch (error) {
-    return { error };
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   return { teamId: teamDocRef.id };

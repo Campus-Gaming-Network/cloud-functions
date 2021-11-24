@@ -1,15 +1,15 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS } from "../constants";
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // reportEntity
 exports.reportEntity = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    return { error: { message: "Invalid request" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
   }
 
   if (!context.auth || !context.auth.uid) {
-    return { error: { message: "Not authorized" } };
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   const reportData = {
@@ -21,10 +21,6 @@ exports.reportEntity = functions.https.onCall(async (data, context) => {
     metadata: data.metadata,
     entity: data.entity,
     reportedEntity: {},
-    error: {
-      message: "",
-      trace: {},
-    },
     status: "new",
   };
 
@@ -35,24 +31,21 @@ exports.reportEntity = functions.https.onCall(async (data, context) => {
       .collection(data.entity.type)
       .doc(data.entity.id)
       .get();
-  } catch (error) {
-    reportData.error.message = "Error getting entity.";
-    reportData.error.trace = error as FirestoreError;
-  }
+    } catch (error: any) {
+      throw new functions.https.HttpsError(error.code, error.message);
+    }
 
   if (reportedEntityDoc && reportedEntityDoc.exists) {
     reportData.reportedEntity = {
       ...reportedEntityDoc.data(),
       ref: reportedEntityDoc.ref,
     };
-  } else {
-    reportData.error.message = "Entity does not exist.";
   }
 
   try {
     await db.collection(COLLECTIONS.REPORTS).add(reportData);
-  } catch (error) {
-    return error;
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
   }
 
   return;
