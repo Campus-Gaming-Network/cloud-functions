@@ -1,12 +1,12 @@
 import { admin, db, functions } from "../firebase";
 import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnUpdated
 exports.eventResponsesOnUpdated = functions.firestore
   .document(DOCUMENT_PATHS.EVENT_RESPONSES)
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // If an event-response document response field is updated, increment or decrement
@@ -38,24 +38,32 @@ exports.eventResponsesOnUpdated = functions.firestore
         } updated: ${changes.join(", ")}`
       );
 
-      if (newEventResponseData.response === "YES") {
-        eventRef.set({
+      if (newEventResponseData.response === EVENT_RESPONSES.YES) {
+        try {
+          await eventRef.set({
             responses: {
               no: admin.firestore.FieldValue.increment(-1),
               yes: admin.firestore.FieldValue.increment(1),
             },
           },
           { merge: true }
-        );
-      } else if (newEventResponseData.response === "NO") {
-        eventRef.set({
+        ); 
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (newEventResponseData.response === EVENT_RESPONSES.NO) {
+        try {
+          await eventRef.set({
             responses: {
               yes: admin.firestore.FieldValue.increment(-1),
               no: admin.firestore.FieldValue.increment(1),
             },
           },
           { merge: true }
-        );
+        ); 
+        } catch (error) {
+          console.log(error)
+        }
       }
     }
 

@@ -5,7 +5,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 // teamOnDelete
 exports.teamOnDelete = functions.firestore
   .document(DOCUMENT_PATHS.TEAM)
-  .onDelete(async (snapshot, context) => {
+  .onDelete(async (_, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // If a user deletes a team, find all the team-auths tied to the team and
@@ -46,4 +46,6 @@ exports.teamOnDelete = functions.firestore
 
         batch.commit();
     }
+
+    return;
   });

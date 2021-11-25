@@ -6,7 +6,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 // updateEventResponsesOnEventUpdate
 exports.updateEventResponsesOnEventUpdate = functions.firestore
   .document(DOCUMENT_PATHS.EVENT)
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // Updates all event responses that are tied to the event we are updating.
@@ -70,40 +70,43 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
         `Event ${context.params.eventId} updated: ${changes.join(", ")}`
       );
 
-      return eventResponsesQuery
-        .get()
-        .then((snapshot) => {
-          if (!snapshot.empty) {
-            let batch = db.batch();
+      let batch = db.batch();
 
-            snapshot.forEach((doc) => {
-              batch.set(
-                doc.ref,
-                {
-                  event: {
-                    name: newEventData.name,
-                    description: newEventData.description,
-                    startDateTime: newEventData.startDateTime,
-                    endDateTime: newEventData.endDateTime,
-                    isOnlineEvent: newEventData.isOnlineEvent,
-                    responses: newEventData.responses,
-                    game: newEventData.game,
-                  },
-                },
-                { merge: true }
-              );
-            });
+      try {
+        const snapshot = await eventResponsesQuery.get();
 
-            return batch.commit();
-          }
-
+        if (snapshot.empty) {
           return;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        }
+
+        snapshot.forEach((doc) => {
+          batch.set(
+            doc.ref,
+            {
+              event: {
+                name: newEventData.name,
+                description: newEventData.description,
+                startDateTime: newEventData.startDateTime,
+                endDateTime: newEventData.endDateTime,
+                isOnlineEvent: newEventData.isOnlineEvent,
+                responses: newEventData.responses,
+                game: newEventData.game,
+              },
+            },
+            { merge: true }
+          );
         });
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      try {
+        await batch.commit();
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    return null;
+    return;
   });

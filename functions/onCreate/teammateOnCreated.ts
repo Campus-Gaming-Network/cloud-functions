@@ -5,7 +5,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 // teammateOnCreated
 exports.teammateOnCreated = functions.firestore
   .document(DOCUMENT_PATHS.TEAMMATES)
-  .onCreate((snapshot) => {
+  .onCreate(async (snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // To keep track of how many people are apart of a team, when a teammate is created
@@ -17,11 +17,15 @@ exports.teammateOnCreated = functions.firestore
       const teammateResponseData = snapshot.data();
       const teamRef = db.collection(COLLECTIONS.TEAMS).doc(teammateResponseData.team.id);
 
-      return teamRef.set(
-        { memberCount: admin.firestore.FieldValue.increment(1) },
-        { merge: true }
-      );
+      try {
+        await teamRef.set(
+          { memberCount: admin.firestore.FieldValue.increment(1) },
+          { merge: true }
+        ); 
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    return null;
+    return;
   });

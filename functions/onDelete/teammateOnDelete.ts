@@ -22,22 +22,22 @@ exports.teammateOnDelete = functions.firestore
       try {
           teamDoc = await teamRef.get();
       } catch (error) {
-          console.log(error);
-          return false;
+          return;
       }
 
-      if (teamDoc.exists) {
-        try {
-          await teamRef.set(
-            { memberCount: admin.firestore.FieldValue.increment(-1) },
-            { merge: true }
-          );
-        } catch (error) {
-          console.log(error);
-          return false;
-        }
+      if (!teamDoc.exists) {
+        return;
+      }
+
+      try {
+        await teamRef.set(
+          { memberCount: admin.firestore.FieldValue.increment(-1) },
+          { merge: true }
+        );
+      } catch (error) {
+        return;
       }
     }
 
-    return null;
+    return;
   });

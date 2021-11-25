@@ -5,7 +5,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
 // updateSchoolUserCountOnUserUpdate
 exports.updateSchoolUserCountOnUserUpdate = functions.firestore
   .document(DOCUMENT_PATHS.USER)
-  .onUpdate((change) => {
+  .onUpdate(async (change) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // When a user updates their school, decrement the previous schools userCount
@@ -20,16 +20,26 @@ exports.updateSchoolUserCountOnUserUpdate = functions.firestore
         const prevSchoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(previousUserData.school.id);
         const newSchoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(previousUserData.school.id);
 
-        prevSchoolRef.set({ userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true }).then(() => {
-            newSchoolRef.set({ userCount: admin.firestore.FieldValue.increment(1) }, { merge: true }).catch((error) => {
-                console.log(error);
-                return false;
-            });
-        }).catch((error) => {
+        let batch = db.batch();
+
+        batch.set(
+            prevSchoolRef,
+            { userCount: admin.firestore.FieldValue.increment(-1) },
+            { merge: true }
+        );
+
+        batch.set(
+            newSchoolRef,
+            { userCount: admin.firestore.FieldValue.increment(1) },
+            { merge: true }
+        );
+
+        try {
+            await batch.commit();
+        } catch (error) {
             console.log(error);
-            return false;
-        });
+        }
     }
 
-    return null;
+    return;
   });

@@ -25,6 +25,10 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
   }
 
+  if (data.name.length > 255) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name too long');
+  }
+
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
 
   let team;
@@ -63,7 +67,14 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError(error.code, error.message);
   }
 
-  if (Boolean(data.password) && Boolean(data.password.trim())) {
+  const isChangingPassword = (
+    Boolean(data.password) &&
+    Boolean(data.password.trim())
+  );
+
+  // TODO: Validate password and return error
+
+  if (isChangingPassword) {
     let teamsAuthDocRef;
 
     try {
@@ -74,7 +85,7 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
         .get();
   
       if (!teamsAuthSnapshot.empty) {
-        teamsAuthDocRef = teamsAuthSnapshot.docs[0];
+        teamsAuthDocRef = teamsAuthSnapshot.docs[0].data();
       }
     } catch (error: any) {
       throw new functions.https.HttpsError(error.code, error.message);

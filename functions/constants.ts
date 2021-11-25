@@ -88,6 +88,15 @@ export const QUERY_OPERATORS: QueryOperators = {
     IN: "in",
     NOT_IN: "not-in",
 }
+type EventResponse = "YES" | "NO";
+interface EventResponses {
+    YES: EventResponse;
+    NO: EventResponse;
+}
+export const EVENT_RESPONSES: EventResponses = {
+    YES: "YES",
+    NO: "NO",
+};
 
 // Algolia
 export const ALGOLIA_ID: string = functions.config().algolia.app;

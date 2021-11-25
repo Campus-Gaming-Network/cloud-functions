@@ -59,19 +59,31 @@ exports.trackCreatedUpdated = functions.firestore
     };
 
     if (createDoc) {
-      return change.after.ref.set({
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          updatedAt: admin.firestore.FieldValue.serverTimestamp()
-        },
-        { merge: true }
-      );
+      try {
+        await change.after.ref.set({
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+          },
+          { merge: true }
+        );
+        return;
+      } catch (error) {
+        console.log(error);
+        return;
+      }
     }
 
     if (updateDoc && canUpdate()) {
-      return change.after.ref.set(
-        { updatedAt: admin.firestore.FieldValue.serverTimestamp() },
-        { merge: true }
-      );
+      try {
+        await change.after.ref.set(
+          { updatedAt: admin.firestore.FieldValue.serverTimestamp() },
+          { merge: true }
+        );
+        return; 
+      } catch (error) {
+        console.log(error);
+        return;
+      }
     }
 
     return;

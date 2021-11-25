@@ -15,13 +15,12 @@ exports.addAlgoliaIndex = functions.firestore
     // Schools dont get added often, except for when we initially upload all the schools.
     //
     ////////////////////////////////////////////////////////////////////////////////
-
-    if (snapshot.exists) {
-      const { createdAt, updatedAt, ...data } = snapshot.data();
-      const objectID = snapshot.id;
-
-      return algoliaAdminIndex.saveObject({ ...data, objectID });
+    if (!snapshot.exists) {
+      return;
     }
 
-    return;
+    const { createdAt, updatedAt, ...data } = snapshot.data();
+    const objectID = snapshot.id;
+
+    return algoliaAdminIndex.saveObject({ ...data, objectID });
   });

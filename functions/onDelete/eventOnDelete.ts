@@ -5,7 +5,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 // eventOnDelete
 exports.eventOnDelete = functions.firestore
   .document(DOCUMENT_PATHS.EVENT)
-  .onDelete((snapshot, context) => {
+  .onDelete(async (_, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // If a user deletes an event, find all the event-responses tied to the event and
@@ -18,23 +18,21 @@ exports.eventOnDelete = functions.firestore
       .collection(COLLECTIONS.EVENT_RESPONSES)
       .where("event.ref", QUERY_OPERATORS.EQUAL_TO, eventDocRef);
 
-    return eventResponsesQuery
-      .get()
-      .then((querySnapshot) => {
-        if (!querySnapshot.empty) {
-          let batch = db.batch();
+    try {
+      const querySnapshot = await eventResponsesQuery.get();
 
-          querySnapshot.forEach((doc) => {
-            batch.delete(doc.ref);
-          });
+      if (!querySnapshot.empty) {
+        let batch = db.batch();
 
-          return batch.commit();
-        }
+        querySnapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
 
-        return;
-      })
-      .catch((err) => {
-        console.log(err);
-        return false;
-      });
+        return batch.commit();
+      } 
+    } catch(error) {
+      return;
+    }
+
+    return;
   });

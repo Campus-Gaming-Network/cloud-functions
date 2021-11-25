@@ -1,5 +1,5 @@
 import { admin, db, functions } from "../firebase";
-import { COLLECTIONS, DOCUMENT_PATHS } from "../constants";
+import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnDelete
@@ -24,34 +24,31 @@ exports.eventResponsesOnDelete = functions.firestore
         try {
             eventDoc = await eventRef.get();
         } catch (error) {
-            console.log(error);
-            return false;
+            return;
         }
 
-        if (eventDoc.exists && deletedData.response === "YES") {
+        if (!eventDoc.exists) {
+          return;
+        }
 
+        if (deletedData.response === EVENT_RESPONSES.YES) {
           try {
             await eventRef.set(
               { responses: { yes: admin.firestore.FieldValue.increment(-1) } },
               { merge: true }
             ) 
           } catch (error) {
-            console.log(error);
-            return false;
+            return;
           }
-
-        } else if (eventDoc.exists && deletedData.response === "NO") {
-
+        } else if (deletedData.response === EVENT_RESPONSES.NO) {
           try {
             await eventRef.set(
               { responses: { no: admin.firestore.FieldValue.increment(-1) } },
               { merge: true }
             )
           } catch (error) {
-            console.log(error);
-            return false;
+            return;
           }
-
         }
 
       }

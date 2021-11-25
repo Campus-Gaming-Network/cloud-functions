@@ -6,7 +6,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 // updateEventResponsesOnSchoolUpdate
 exports.updateEventResponsesOnSchoolUpdate = functions.firestore
   .document(DOCUMENT_PATHS.SCHOOL)
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // We store the name of the school tied to an event on the event-response so that it can
@@ -39,34 +39,37 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
         )}`
       );
 
-      return eventResponsesQuery
-        .get()
-        .then((snapshot) => {
-          if (!snapshot.empty) {
-            let batch = db.batch();
+      let batch = db.batch();
 
-            snapshot.forEach((doc) => {
-              batch.set(
-                doc.ref,
-                {
-                  school: {
-                    name: newSchoolData.name,
-                  },
-                },
-                { merge: true }
-              );
-            });
+      try {
+        const snapshot = await eventResponsesQuery.get()
 
-            return batch.commit();
-          }
-
+        if (snapshot.empty) {
           return;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        }
+
+        snapshot.forEach((doc) => {
+          batch.set(
+            doc.ref,
+            {
+              school: {
+                name: newSchoolData.name,
+              },
+            },
+            { merge: true }
+          );
         });
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      try {
+        await batch.commit();
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    return null;
+    return;
   });

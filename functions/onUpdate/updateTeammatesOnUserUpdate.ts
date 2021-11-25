@@ -6,7 +6,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 // updateTeammatesOnUserUpdate
 exports.updateTeammatesOnUserUpdate = functions.firestore
   .document(DOCUMENT_PATHS.USER)
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // When a user updates specific fields on their document, update all other documents
@@ -42,50 +42,50 @@ exports.updateTeammatesOnUserUpdate = functions.firestore
 
     if (changes.length > 0) {
       const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
-      const teammtesQuery = db
-        .collection(COLLECTIONS.TEAMMATES)
-        .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+      const teammtesQuery = db.collection(COLLECTIONS.TEAMMATES).where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
       console.log(
         `User updated ${context.params.userId} updated: ${changes.join(", ")}`
       );
 
-      return teammtesQuery
-        .get()
-        .then((snapshot) => {
-          if (!snapshot.empty) {
-            let batch = db.batch();
+      let batch = db.batch();
 
-            snapshot.forEach((doc) => {
-              batch.set(
-                doc.ref,
-                {
-                  user: {
-                    firstName: newUserData.firstName,
-                    lastName: newUserData.lastName,
-                    gravatar: newUserData.gravatar,
-                    status: newUserData.status,
-                    school: {
-                      id: newUserData.school.id,
-                      ref: newUserData.school.ref,
-                      name: newUserData.school.name,
-                    },
-                  },
-                },
-                { merge: true }
-              );
-            });
+      try {
+        const snapshot = await teammtesQuery.get();
 
-            return batch.commit();
-          }
-
+        if (snapshot.empty) {
           return;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        }
+
+        snapshot.forEach((doc) => {
+          batch.set(
+            doc.ref,
+            {
+              user: {
+                firstName: newUserData.firstName,
+                lastName: newUserData.lastName,
+                gravatar: newUserData.gravatar,
+                status: newUserData.status,
+                school: {
+                  id: newUserData.school.id,
+                  ref: newUserData.school.ref,
+                  name: newUserData.school.name,
+                },
+              },
+            },
+            { merge: true }
+          );
         });
+      } catch (error) {
+        console.log(error); 
+      }
+
+      try {
+        await batch.commit();
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    return null;
+    return;
   });

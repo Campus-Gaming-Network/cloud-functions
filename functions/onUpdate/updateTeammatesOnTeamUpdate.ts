@@ -6,7 +6,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
 // updateTeammatesOnTeamUpdate
 exports.updateTeammatesOnTeamUpdate = functions.firestore
   .document(DOCUMENT_PATHS.TEAM)
-  .onUpdate((change, context) => {
+  .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////
     //
     // When a team updates specific fields on their document, update all other documents
@@ -27,41 +27,44 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
     }
 
     if (changes.length > 0) {
-      const teammtesQuery = db.collection(COLLECTIONS.TEAMMATES).where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
+      const teammatesQuery = db.collection(COLLECTIONS.TEAMMATES).where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
 
       console.log(
         `Team updated ${context.params.userId} updated: ${changes.join(", ")}`
       );
 
-      return teammtesQuery
-        .get()
-        .then((snapshot) => {
-          if (!snapshot.empty) {
-            let batch = db.batch();
+      let batch = db.batch();
 
-            snapshot.forEach((doc) => {
-              batch.set(
-                doc.ref,
-                {
-                  team: {
-                    name: newUserData.name,
-                    shortName: newUserData.shortName,
-                  },
-                },
-                { merge: true }
-              );
-            });
+      try {
+        const snapshot = await teammatesQuery.get();
 
-            return batch.commit();
-          }
-
+        if (snapshot.empty) {
           return;
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        }
+
+        snapshot.forEach((doc) => {
+          batch.set(
+            doc.ref,
+            {
+              team: {
+                name: newUserData.name,
+                shortName: newUserData.shortName,
+              },
+            },
+            { merge: true }
+          );
         });
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      try {
+        await batch.commit();        
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    return null;
+    return;
   });

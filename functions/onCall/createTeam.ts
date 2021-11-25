@@ -21,8 +21,16 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
     throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
   }
 
+  if (data.name.length > 255) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name too long');
+  }
+
   if (!data.password || !data.password.trim()) {
     throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password required');
+  }
+
+  if (data.password.length > 255) {
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password too long');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
