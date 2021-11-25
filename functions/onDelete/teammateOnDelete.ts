@@ -20,9 +20,9 @@ exports.teammateOnDelete = functions.firestore
       let teamDoc;
 
       try {
-          teamDoc = await teamRef.get();
+        teamDoc = await teamRef.get();
       } catch (error) {
-          return;
+        return;
       }
 
       if (!teamDoc.exists) {

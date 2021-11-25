@@ -31,7 +31,10 @@ exports.searchUsers = functions.https.onCall(async (data, context) => {
       }
 
       if (authRecord && authRecord.uid) {
-        record = await db.collection(COLLECTIONS.USERS).doc(authRecord.uid).get();
+        record = await db
+          .collection(COLLECTIONS.USERS)
+          .doc(authRecord.uid)
+          .get();
       }
     }
 

@@ -5,27 +5,45 @@ import { COLLECTIONS, TEAM_ROLES, FUNCTIONS_ERROR_CODES } from "../constants";
 // promoteTeammate
 exports.promoteTeammate = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+      "Invalid request"
+    );
   }
 
   if (!context.auth || !context.auth.uid) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Not authorized"
+    );
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Team id required"
+    );
   }
 
   if (!data.teammateId || !data.teammateId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate id required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Teammate id required"
+    );
   }
 
   if (!data.role || !data.role.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate role required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Teammate role required"
+    );
   }
 
   if (!TEAM_ROLES.includes(data.role)) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Invalid teammate role');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Invalid teammate role"
+    );
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -44,7 +62,10 @@ exports.promoteTeammate = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid team');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+      "Invalid team"
+    );
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
@@ -54,7 +75,7 @@ exports.promoteTeammate = functions.https.onCall(async (data, context) => {
 
     try {
       const record = await userDocRef.get();
-  
+
       if (record.exists) {
         user = record.data();
       }
@@ -63,23 +84,32 @@ exports.promoteTeammate = functions.https.onCall(async (data, context) => {
     }
 
     if (!user) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
+      throw new functions.https.HttpsError(
+        FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+        "Invalid user"
+      );
     }
-  
+
     try {
-      await teamDocRef.set({
+      await teamDocRef.set(
+        {
           roles: {
-              [data.role]: {
-                  id: user.id,
-                  ref: userDocRef,
-              },
+            [data.role]: {
+              id: user.id,
+              ref: userDocRef,
+            },
           },
-      }, { merge: true });
+        },
+        { merge: true }
+      );
     } catch (error: any) {
       throw new functions.https.HttpsError(error.code, error.message);
     }
   } else {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Not authorized"
+    );
   }
 
   return { success: true };

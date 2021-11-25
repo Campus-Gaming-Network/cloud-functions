@@ -1,4 +1,4 @@
-import * as _functions from 'firebase-functions';
+import * as _functions from "firebase-functions";
 import * as _admin from "firebase-admin";
 
 export const admin = _admin;

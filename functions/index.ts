@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import * as admin from "firebase-admin";
 
 try {
   admin.initializeApp();
@@ -50,7 +50,7 @@ import * as removeAlgoliaIndex from "./onDelete/removeAlgoliaIndex";
 import * as eventOnDelete from "./onDelete/eventOnDelete";
 import * as userOnDelete from "./onDelete/userOnDelete";
 import * as eventResponsesOnDelete from "./onDelete/eventResponsesOnDelete";
-import * as teamOnDelete from './onDelete/teamOnDelete';
+import * as teamOnDelete from "./onDelete/teamOnDelete";
 import * as teammateOnDelete from "./onDelete/teammateOnDelete";
 
 exports.searchGames = searchGames;

@@ -23,11 +23,15 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
     }
 
     if (previousTeamData.shortName !== newUserData.shortName) {
-      changes.push(changeLog(previousTeamData.shortName, newUserData.shortName));
+      changes.push(
+        changeLog(previousTeamData.shortName, newUserData.shortName)
+      );
     }
 
     if (changes.length > 0) {
-      const teammatesQuery = db.collection(COLLECTIONS.TEAMMATES).where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
+      const teammatesQuery = db
+        .collection(COLLECTIONS.TEAMMATES)
+        .where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
 
       console.log(
         `Team updated ${context.params.userId} updated: ${changes.join(", ")}`
@@ -60,7 +64,7 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
       }
 
       try {
-        await batch.commit();        
+        await batch.commit();
       } catch (error) {
         console.log(error);
       }

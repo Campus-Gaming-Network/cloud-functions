@@ -18,17 +18,31 @@ exports.userOnDelete = functions.firestore
     ////////////////////////////////////////////////////////////////////////////////
 
     const userData = snapshot.data();
-    const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
-    const schoolDocRef = db.collection(COLLECTIONS.SCHOOLS).doc(userData.school.id);
-    const eventsQuery = db.collection(COLLECTIONS.EVENTS).where("creator", QUERY_OPERATORS.EQUAL_TO, userDocRef);
-    const eventResponsesQuery = db.collection(COLLECTIONS.EVENT_RESPONSES).where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
-    const teammatesQuery = db.collection(COLLECTIONS.TEAMMATES).where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+    const userDocRef = db
+      .collection(COLLECTIONS.USERS)
+      .doc(context.params.userId);
+    const schoolDocRef = db
+      .collection(COLLECTIONS.SCHOOLS)
+      .doc(userData.school.id);
+    const eventsQuery = db
+      .collection(COLLECTIONS.EVENTS)
+      .where("creator", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+    const eventResponsesQuery = db
+      .collection(COLLECTIONS.EVENT_RESPONSES)
+      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+    const teammatesQuery = db
+      .collection(COLLECTIONS.TEAMMATES)
+      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
     let batch = db.batch();
 
     // Decrement school user count
 
-    batch.set(schoolDocRef, { userCount: admin.firestore.FieldValue.increment(-1) }, { merge: true });
+    batch.set(
+      schoolDocRef,
+      { userCount: admin.firestore.FieldValue.increment(-1) },
+      { merge: true }
+    );
 
     // Delete all event-response docs
 
@@ -63,7 +77,7 @@ exports.userOnDelete = functions.firestore
     // Delete all teammate docs
 
     try {
-      const querySnapshot =  await teammatesQuery.get();
+      const querySnapshot = await teammatesQuery.get();
 
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc) => {

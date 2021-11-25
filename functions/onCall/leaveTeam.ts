@@ -1,23 +1,39 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from "../constants";
+import {
+  COLLECTIONS,
+  FUNCTIONS_ERROR_CODES,
+  QUERY_OPERATORS,
+} from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // leaveTeam
 exports.leaveTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+      "Invalid request"
+    );
   }
 
   if (!context.auth || !context.auth.uid) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Not authorized"
+    );
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Email verification required"
+    );
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Team id required"
+    );
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -35,14 +51,20 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.NOT_FOUND,
+      "Invalid team"
+    );
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
   const hasOtherMembers = team.memberCount > 1;
 
   if (isTeamLeader && hasOtherMembers) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'You must assign a new leader before leaving the team');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "You must assign a new leader before leaving the team"
+    );
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);

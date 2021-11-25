@@ -15,13 +15,15 @@ exports.userOnCreated = functions.firestore
 
     if (snapshot.exists) {
       const userData = snapshot.data();
-      const schoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(userData.school.id);
+      const schoolRef = db
+        .collection(COLLECTIONS.SCHOOLS)
+        .doc(userData.school.id);
 
       try {
         await schoolRef.set(
           { userCount: admin.firestore.FieldValue.increment(1) },
           { merge: true }
-        ); 
+        );
       } catch (error) {
         console.log(error);
       }

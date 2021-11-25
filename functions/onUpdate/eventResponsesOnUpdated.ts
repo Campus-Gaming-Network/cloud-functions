@@ -40,29 +40,31 @@ exports.eventResponsesOnUpdated = functions.firestore
 
       if (newEventResponseData.response === EVENT_RESPONSES.YES) {
         try {
-          await eventRef.set({
-            responses: {
-              no: admin.firestore.FieldValue.increment(-1),
-              yes: admin.firestore.FieldValue.increment(1),
+          await eventRef.set(
+            {
+              responses: {
+                no: admin.firestore.FieldValue.increment(-1),
+                yes: admin.firestore.FieldValue.increment(1),
+              },
             },
-          },
-          { merge: true }
-        ); 
+            { merge: true }
+          );
         } catch (error) {
           console.log(error);
         }
       } else if (newEventResponseData.response === EVENT_RESPONSES.NO) {
         try {
-          await eventRef.set({
-            responses: {
-              yes: admin.firestore.FieldValue.increment(-1),
-              no: admin.firestore.FieldValue.increment(1),
+          await eventRef.set(
+            {
+              responses: {
+                yes: admin.firestore.FieldValue.increment(-1),
+                no: admin.firestore.FieldValue.increment(1),
+              },
             },
-          },
-          { merge: true }
-        ); 
+            { merge: true }
+          );
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
     }

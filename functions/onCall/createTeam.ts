@@ -6,31 +6,52 @@ import { hashPassword } from "../utils";
 // createTeam
 exports.createTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+      "Invalid request"
+    );
   }
 
   if (!context.auth || !context.auth.uid) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Not authorized"
+    );
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Email verification required"
+    );
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Team name required"
+    );
   }
 
   if (data.name.length > 255) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name too long');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Team name too long"
+    );
   }
 
   if (!data.password || !data.password.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Team password required"
+    );
   }
 
   if (data.password.length > 255) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password too long');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Team password too long"
+    );
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -48,11 +69,16 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!user) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+      "Invalid user"
+    );
   }
 
   const shortName = data.shortName ? data.shortName.trim() : data.shortName;
-  const description = data.description ? data.description.trim() : data.description;
+  const description = data.description
+    ? data.description.trim()
+    : data.description;
   const website = data.website ? data.website.trim() : data.website;
 
   const teamData = {

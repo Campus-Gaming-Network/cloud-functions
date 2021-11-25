@@ -1,23 +1,39 @@
 import { db, functions } from "../firebase";
-import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES } from "../constants";
+import {
+  COLLECTIONS,
+  CHALLONGE_API_KEY,
+  FUNCTIONS_ERROR_CODES,
+} from "../constants";
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTournament
 exports.createTournament = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid request');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
+      "Invalid request"
+    );
   }
 
   if (!context.auth || !context.auth.uid) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Not authorized"
+    );
   }
 
   if (!context.auth.token || !context.auth.token.email_verified) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Email verification required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
+      "Email verification required"
+    );
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Tournament name required');
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
+      "Tournament name required"
+    );
   }
 
   let challongeResponse;
@@ -61,34 +77,40 @@ exports.createTournament = functions.https.onCall(async (data, context) => {
       },
     });
   } catch (error) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, "Challonge error");
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.UNKNOWN,
+      "Challonge error"
+    );
   }
 
-if (challongeResponse.errors) {
-  throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, challongeResponse.errors.join("; "));
-}
+  if (challongeResponse.errors) {
+    throw new functions.https.HttpsError(
+      FUNCTIONS_ERROR_CODES.UNKNOWN,
+      challongeResponse.errors.join("; ")
+    );
+  }
 
-let tournamentDocRef;
+  let tournamentDocRef;
 
-try {
-  tournamentDocRef = await db.collection(COLLECTIONS.TOURNAMENTS).add({
+  try {
+    tournamentDocRef = await db.collection(COLLECTIONS.TOURNAMENTS).add({
       challonge: {
-          id: challongeResponse.tournament.id,
-          url: challongeResponse.tournament.url,
-          fullUrl: challongeResponse.tournament.full_challonge_url,
+        id: challongeResponse.tournament.id,
+        url: challongeResponse.tournament.url,
+        fullUrl: challongeResponse.tournament.full_challonge_url,
       },
       name: data.name,
       description: data.description,
-  });
-} catch (error: any) {
-  throw new functions.https.HttpsError(error.code, error.message);
-}
+    });
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
+  }
 
-try {
-  await tournamentDocRef.set({ id: tournamentDocRef.id }, { merge: true });
-} catch (error: any) {
-  throw new functions.https.HttpsError(error.code, error.message);
-}
-   
+  try {
+    await tournamentDocRef.set({ id: tournamentDocRef.id }, { merge: true });
+  } catch (error: any) {
+    throw new functions.https.HttpsError(error.code, error.message);
+  }
+
   return { tournamentId: null };
 });

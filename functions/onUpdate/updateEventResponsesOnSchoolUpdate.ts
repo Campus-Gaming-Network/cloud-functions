@@ -42,7 +42,7 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
       let batch = db.batch();
 
       try {
-        const snapshot = await eventResponsesQuery.get()
+        const snapshot = await eventResponsesQuery.get();
 
         if (snapshot.empty) {
           return;

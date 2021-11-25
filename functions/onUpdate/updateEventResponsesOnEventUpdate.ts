@@ -61,7 +61,9 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
     }
 
     if (changes.length > 0) {
-      const eventDocRef = db.collection(COLLECTIONS.EVENTS).doc(context.params.eventId);
+      const eventDocRef = db
+        .collection(COLLECTIONS.EVENTS)
+        .doc(context.params.eventId);
       const eventResponsesQuery = db
         .collection(COLLECTIONS.EVENT_RESPONSES)
         .where("event.ref", QUERY_OPERATORS.EQUAL_TO, eventDocRef);

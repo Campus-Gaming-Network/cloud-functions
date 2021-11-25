@@ -17,28 +17,32 @@ exports.updateSchoolUserCountOnUserUpdate = functions.firestore
     const newUserData = change.after.data();
 
     if (previousUserData.school.id !== newUserData.school.id) {
-        const prevSchoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(previousUserData.school.id);
-        const newSchoolRef = db.collection(COLLECTIONS.SCHOOLS).doc(previousUserData.school.id);
+      const prevSchoolRef = db
+        .collection(COLLECTIONS.SCHOOLS)
+        .doc(previousUserData.school.id);
+      const newSchoolRef = db
+        .collection(COLLECTIONS.SCHOOLS)
+        .doc(previousUserData.school.id);
 
-        let batch = db.batch();
+      let batch = db.batch();
 
-        batch.set(
-            prevSchoolRef,
-            { userCount: admin.firestore.FieldValue.increment(-1) },
-            { merge: true }
-        );
+      batch.set(
+        prevSchoolRef,
+        { userCount: admin.firestore.FieldValue.increment(-1) },
+        { merge: true }
+      );
 
-        batch.set(
-            newSchoolRef,
-            { userCount: admin.firestore.FieldValue.increment(1) },
-            { merge: true }
-        );
+      batch.set(
+        newSchoolRef,
+        { userCount: admin.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
 
-        try {
-            await batch.commit();
-        } catch (error) {
-            console.log(error);
-        }
+      try {
+        await batch.commit();
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     return;

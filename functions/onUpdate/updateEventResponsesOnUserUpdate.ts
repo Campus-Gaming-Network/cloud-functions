@@ -37,11 +37,15 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
     }
 
     if (previousUserData.school.id !== newUserData.school.id) {
-      changes.push(changeLog(previousUserData.school.id, newUserData.school.id));
+      changes.push(
+        changeLog(previousUserData.school.id, newUserData.school.id)
+      );
     }
 
     if (changes.length > 0) {
-      const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
+      const userDocRef = db
+        .collection(COLLECTIONS.USERS)
+        .doc(context.params.userId);
       const eventResponsesQuery = db
         .collection(COLLECTIONS.EVENT_RESPONSES)
         .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
@@ -84,7 +88,7 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
       }
 
       try {
-        await batch.commit()
+        await batch.commit();
       } catch (error) {
         console.log(error);
       }

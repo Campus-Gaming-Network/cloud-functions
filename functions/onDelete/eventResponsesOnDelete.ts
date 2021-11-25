@@ -17,14 +17,16 @@ exports.eventResponsesOnDelete = functions.firestore
       const deletedData = snapshot.data();
 
       if (deletedData) {
-        const eventRef = db.collection(COLLECTIONS.EVENTS).doc(deletedData.event.id);
+        const eventRef = db
+          .collection(COLLECTIONS.EVENTS)
+          .doc(deletedData.event.id);
 
         let eventDoc;
 
         try {
-            eventDoc = await eventRef.get();
+          eventDoc = await eventRef.get();
         } catch (error) {
-            return;
+          return;
         }
 
         if (!eventDoc.exists) {
@@ -36,7 +38,7 @@ exports.eventResponsesOnDelete = functions.firestore
             await eventRef.set(
               { responses: { yes: admin.firestore.FieldValue.increment(-1) } },
               { merge: true }
-            ) 
+            );
           } catch (error) {
             return;
           }
@@ -45,12 +47,11 @@ exports.eventResponsesOnDelete = functions.firestore
             await eventRef.set(
               { responses: { no: admin.firestore.FieldValue.increment(-1) } },
               { merge: true }
-            )
+            );
           } catch (error) {
             return;
           }
         }
-
       }
     }
 

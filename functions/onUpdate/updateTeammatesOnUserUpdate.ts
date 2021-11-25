@@ -37,12 +37,18 @@ exports.updateTeammatesOnUserUpdate = functions.firestore
     }
 
     if (previousUserData.school.id !== newUserData.school.id) {
-      changes.push(changeLog(previousUserData.school.id, newUserData.school.id));
+      changes.push(
+        changeLog(previousUserData.school.id, newUserData.school.id)
+      );
     }
 
     if (changes.length > 0) {
-      const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
-      const teammtesQuery = db.collection(COLLECTIONS.TEAMMATES).where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+      const userDocRef = db
+        .collection(COLLECTIONS.USERS)
+        .doc(context.params.userId);
+      const teammtesQuery = db
+        .collection(COLLECTIONS.TEAMMATES)
+        .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
       console.log(
         `User updated ${context.params.userId} updated: ${changes.join(", ")}`
@@ -77,7 +83,7 @@ exports.updateTeammatesOnUserUpdate = functions.firestore
           );
         });
       } catch (error) {
-        console.log(error); 
+        console.log(error);
       }
 
       try {
