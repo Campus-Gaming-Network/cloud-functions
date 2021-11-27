@@ -84,22 +84,20 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
         return;
       }
 
+      const data = {
+        event: {
+          name: newEventData.name,
+          description: newEventData.description,
+          startDateTime: newEventData.startDateTime,
+          endDateTime: newEventData.endDateTime,
+          isOnlineEvent: newEventData.isOnlineEvent,
+          responses: newEventData.responses,
+          game: newEventData.game,
+        },
+      };
+
       snapshot.forEach((doc) => {
-        batch.set(
-          doc.ref,
-          {
-            event: {
-              name: newEventData.name,
-              description: newEventData.description,
-              startDateTime: newEventData.startDateTime,
-              endDateTime: newEventData.endDateTime,
-              isOnlineEvent: newEventData.isOnlineEvent,
-              responses: newEventData.responses,
-              game: newEventData.game,
-            },
-          },
-          { merge: true }
-        );
+        batch.set(doc.ref, data, { merge: true });
       });
     } catch (error) {
       console.log(error);

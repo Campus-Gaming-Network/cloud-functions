@@ -37,7 +37,7 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
       .where("school.ref", QUERY_OPERATORS.EQUAL_TO, schoolDocRef);
 
     console.log(
-      `School updated ${context.params.schoolId} updated: ${changes.join(", ")}`
+      `School ${context.params.schoolId} updated: ${changes.join(", ")}`
     );
 
     let batch = db.batch();

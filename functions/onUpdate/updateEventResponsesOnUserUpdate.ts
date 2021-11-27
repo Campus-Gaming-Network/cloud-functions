@@ -54,7 +54,7 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
       .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
     console.log(
-      `User updated ${context.params.userId} updated: ${changes.join(", ")}`
+      `User ${context.params.userId} updated: ${changes.join(", ")}`
     );
 
     let batch = db.batch();
@@ -66,24 +66,22 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
         return;
       }
 
-      snapshot.forEach((doc) => {
-        batch.set(
-          doc.ref,
-          {
-            user: {
-              firstName: newUserData.firstName,
-              lastName: newUserData.lastName,
-              gravatar: newUserData.gravatar,
-              status: newUserData.status,
-              school: {
-                id: newUserData.school.id,
-                ref: newUserData.school.ref,
-                name: newUserData.school.name,
-              },
-            },
+      const data = {
+        user: {
+          firstName: newUserData.firstName,
+          lastName: newUserData.lastName,
+          gravatar: newUserData.gravatar,
+          status: newUserData.status,
+          school: {
+            id: newUserData.school.id,
+            ref: newUserData.school.ref,
+            name: newUserData.school.name,
           },
-          { merge: true }
-        );
+        },
+      };
+
+      snapshot.forEach((doc) => {
+        batch.set(doc.ref, data, { merge: true });
       });
     } catch (error) {
       console.log(error);

@@ -37,7 +37,7 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
       .where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
 
     console.log(
-      `Team updated ${context.params.userId} updated: ${changes.join(", ")}`
+      `Team ${context.params.userId} updated: ${changes.join(", ")}`
     );
 
     let batch = db.batch();
@@ -49,17 +49,15 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
         return;
       }
 
+      const data = {
+        team: {
+          name: newUserData.name,
+          shortName: newUserData.shortName,
+        },
+      };
+
       snapshot.forEach((doc) => {
-        batch.set(
-          doc.ref,
-          {
-            team: {
-              name: newUserData.name,
-              shortName: newUserData.shortName,
-            },
-          },
-          { merge: true }
-        );
+        batch.set(doc.ref, data, { merge: true });
       });
     } catch (error) {
       console.log(error);

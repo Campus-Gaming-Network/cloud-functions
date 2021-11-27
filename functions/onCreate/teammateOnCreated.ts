@@ -13,20 +13,22 @@ exports.teammateOnCreated = functions.firestore
     //
     ////////////////////////////////////////////////////////////////////////////////
 
-    if (snapshot.exists) {
-      const teammateResponseData = snapshot.data();
-      const teamRef = db
-        .collection(COLLECTIONS.TEAMS)
-        .doc(teammateResponseData.team.id);
+    if (!snapshot.exists) {
+      return;
+    }
 
-      try {
-        await teamRef.set(
-          { memberCount: admin.firestore.FieldValue.increment(1) },
-          { merge: true }
-        );
-      } catch (error) {
-        console.log(error);
-      }
+    const teammateResponseData = snapshot.data();
+    const teamRef = db
+      .collection(COLLECTIONS.TEAMS)
+      .doc(teammateResponseData.team.id);
+
+    try {
+      await teamRef.set(
+        { memberCount: admin.firestore.FieldValue.increment(1) },
+        { merge: true }
+      );
+    } catch (error) {
+      console.log(error);
     }
 
     return;
