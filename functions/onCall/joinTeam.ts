@@ -1,7 +1,7 @@
 import { db, functions } from '../firebase';
 import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
 import { comparePasswords } from '../utils';
-import { InvalidRequestError, NotAuthorizedError } from '../errors';
+import { InvalidRequestError, NotAuthorizedError, ValidationError, NotFoundError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // joinTeam
@@ -15,11 +15,11 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
+    throw new ValidationError('Team id required');
   }
 
   if (!data.password || !data.password.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate password required');
+    throw new ValidationError('Teammate password required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -43,14 +43,14 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!teamAuth) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
+    throw new NotFoundError('Invalid team');
   }
 
   if (Boolean(teamAuth)) {
     const isValidPassword = await comparePasswords(data.password, teamAuth.joinHash);
 
     if (!isValidPassword) {
-      throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Invalid password');
+      throw new NotAuthorizedError();
     }
   }
 
@@ -65,7 +65,7 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
+    throw new NotFoundError('Invalid team');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -81,7 +81,7 @@ exports.joinTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!user) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid user');
+    throw new NotFoundError('Invalid user');
   }
 
   try {

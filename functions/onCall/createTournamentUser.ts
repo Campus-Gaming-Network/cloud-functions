@@ -2,7 +2,13 @@ import { db, functions } from '../firebase';
 import * as rp from 'request-promise';
 
 import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
-import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
+import {
+  EmailVerificationEror,
+  InvalidRequestError,
+  NotAuthorizedError,
+  ValidationError,
+  NotFoundError,
+} from '../errors';
 
 const PARTICIPANT_TYPES = ['user', 'team'];
 
@@ -22,15 +28,15 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
   }
 
   if (!data.tournamentId || !data.tournamentId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Tournament id required');
+    throw new ValidationError('Tournament id required');
   }
 
   if (!data.participantType || !data.participantType.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Participant type is required');
+    throw new ValidationError('Participant type is required');
   }
 
   if (!PARTICIPANT_TYPES.includes(data.participantType)) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Invalid participant type');
+    throw new ValidationError('Invalid participant type');
   }
 
   let user;
@@ -49,7 +55,7 @@ exports.createTournamentParticipant = functions.https.onCall(async (data, contex
   }
 
   if (!user) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
+    throw new NotFoundError('Invalid user');
   }
 
   try {

@@ -1,7 +1,13 @@
 import { db, functions } from '../firebase';
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
+import { COLLECTIONS, QUERY_OPERATORS } from '../constants';
 import { hashPassword } from '../utils';
-import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
+import {
+  EmailVerificationEror,
+  InvalidRequestError,
+  NotAuthorizedError,
+  ValidationError,
+  NotFoundError,
+} from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // editTeam
@@ -19,15 +25,15 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.teamId) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
+    throw new ValidationError('Team id required');
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
+    throw new ValidationError('Team name required');
   }
 
   if (data.name.length > 255) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name too long');
+    throw new ValidationError('Team name too long');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -45,11 +51,11 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid team');
+    throw new NotFoundError('Invalid team');
   }
 
   if (team.roles.leader.id !== context.auth.uid) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new NotAuthorizedError();
   }
 
   const name = data.name ? data.name.trim() : data.name;
@@ -93,7 +99,7 @@ exports.editTeam = functions.https.onCall(async (data, context) => {
     }
 
     if (!teamsAuthDocRef) {
-      throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+      throw new NotAuthorizedError();
     }
 
     const joinHash = await hashPassword(data.password.trim());

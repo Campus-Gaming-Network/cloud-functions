@@ -10,7 +10,7 @@ import {
 
 import * as rp from 'request-promise';
 import { DateTime } from 'luxon';
-import { InvalidRequestError } from '../errors';
+import { InvalidRequestError, ValidationError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchGames
@@ -150,7 +150,7 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
   }
 
   if (!accessToken) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Missing access token');
+    throw new ValidationError('Missing access token');
   }
 
   try {

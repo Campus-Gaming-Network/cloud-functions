@@ -1,7 +1,7 @@
 import { db, functions } from '../firebase';
 import * as rp from 'request-promise';
 import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES } from '../constants';
-import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
+import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError, ValidationError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTournament
@@ -19,7 +19,7 @@ exports.createTournament = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Tournament name required');
+    throw new ValidationError('Tournament name required');
   }
 
   let challongeResponse;

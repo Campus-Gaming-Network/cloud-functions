@@ -1,7 +1,13 @@
 import { db, functions } from '../firebase';
 import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from '../constants';
 import { hashPassword } from '../utils';
-import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
+import {
+  EmailVerificationEror,
+  InvalidRequestError,
+  NotAuthorizedError,
+  ValidationError,
+  NotFoundError,
+} from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTeam
@@ -19,19 +25,19 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
+    throw new ValidationError('Team name required');
   }
 
   if (data.name.length > 255) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name too long');
+    throw new ValidationError('Team name too long');
   }
 
   if (!data.password || !data.password.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password required');
+    throw new ValidationError('Team password required');
   }
 
   if (data.password.length > 255) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password too long');
+    throw new ValidationError('Team password too long');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -49,7 +55,7 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!user) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
+    throw new NotFoundError('Invalid user');
   }
 
   const shortName = data.shortName ? data.shortName.trim() : data.shortName;

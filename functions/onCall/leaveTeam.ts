@@ -1,6 +1,12 @@
 import { db, functions } from '../firebase';
 import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
-import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
+import {
+  EmailVerificationEror,
+  InvalidRequestError,
+  NotAuthorizedError,
+  NotFoundError,
+  ValidationError,
+} from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // leaveTeam
@@ -18,7 +24,7 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
+    throw new ValidationError('Team id required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -36,17 +42,14 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
+    throw new NotFoundError('Invalid team');
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
   const hasOtherMembers = team.memberCount > 1;
 
   if (isTeamLeader && hasOtherMembers) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      'You must assign a new leader before leaving the team',
-    );
+    throw new ValidationError('You must assign a new leader before leaving the team');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);

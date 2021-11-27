@@ -1,6 +1,6 @@
 import { db, functions } from '../firebase';
 import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
-import { InvalidRequestError, NotAuthorizedError } from '../errors';
+import { InvalidRequestError, NotAuthorizedError, NotFoundError, ValidationError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // kickTeammate
@@ -14,15 +14,15 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
+    throw new ValidationError('Team id required');
   }
 
   if (!data.teammateId || !data.teammateId.trim()) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate id required');
+    throw new ValidationError('Teammate id required');
   }
 
   if (data.teammateId === context.auth.uid) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'You cannot kick yourself');
+    throw new ValidationError('You cannot kick yourself');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -40,7 +40,7 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
+    throw new NotFoundError('Invalid team');
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
@@ -64,7 +64,7 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
       throw new functions.https.HttpsError(error.code, error.message);
     }
   } else {
-    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
+    throw new NotAuthorizedError();
   }
 
   return { success: true };
