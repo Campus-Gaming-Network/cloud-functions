@@ -16,7 +16,7 @@ exports.trackCreatedUpdated = functions.firestore
     //
     ////////////////////////////////////////////////////////////////////////////////
 
-    const setCols = [
+    const trackedColumns = [
       COLLECTIONS.SCHOOLS,
       COLLECTIONS.USERS,
       COLLECTIONS.EVENTS,
@@ -29,7 +29,7 @@ exports.trackCreatedUpdated = functions.firestore
       COLLECTIONS.TEAMMATES,
     ];
 
-    if (!setCols.includes(context.params.colId)) {
+    if (!trackedColumns.includes(context.params.colId)) {
       return;
     }
 

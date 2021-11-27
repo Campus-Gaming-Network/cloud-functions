@@ -60,54 +60,56 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
       changes.push(changeLog(previousEventData.game, newEventData.game));
     }
 
-    if (changes.length > 0) {
-      const eventDocRef = db
-        .collection(COLLECTIONS.EVENTS)
-        .doc(context.params.eventId);
-      const eventResponsesQuery = db
-        .collection(COLLECTIONS.EVENT_RESPONSES)
-        .where("event.ref", QUERY_OPERATORS.EQUAL_TO, eventDocRef);
+    if (changes.length === 0) {
+      return;
+    }
 
-      console.log(
-        `Event ${context.params.eventId} updated: ${changes.join(", ")}`
-      );
+    const eventDocRef = db
+      .collection(COLLECTIONS.EVENTS)
+      .doc(context.params.eventId);
+    const eventResponsesQuery = db
+      .collection(COLLECTIONS.EVENT_RESPONSES)
+      .where("event.ref", QUERY_OPERATORS.EQUAL_TO, eventDocRef);
 
-      let batch = db.batch();
+    console.log(
+      `Event ${context.params.eventId} updated: ${changes.join(", ")}`
+    );
 
-      try {
-        const snapshot = await eventResponsesQuery.get();
+    let batch = db.batch();
 
-        if (snapshot.empty) {
-          return;
-        }
+    try {
+      const snapshot = await eventResponsesQuery.get();
 
-        snapshot.forEach((doc) => {
-          batch.set(
-            doc.ref,
-            {
-              event: {
-                name: newEventData.name,
-                description: newEventData.description,
-                startDateTime: newEventData.startDateTime,
-                endDateTime: newEventData.endDateTime,
-                isOnlineEvent: newEventData.isOnlineEvent,
-                responses: newEventData.responses,
-                game: newEventData.game,
-              },
-            },
-            { merge: true }
-          );
-        });
-      } catch (error) {
-        console.log(error);
+      if (snapshot.empty) {
         return;
       }
 
-      try {
-        await batch.commit();
-      } catch (error) {
-        console.log(error);
-      }
+      snapshot.forEach((doc) => {
+        batch.set(
+          doc.ref,
+          {
+            event: {
+              name: newEventData.name,
+              description: newEventData.description,
+              startDateTime: newEventData.startDateTime,
+              endDateTime: newEventData.endDateTime,
+              isOnlineEvent: newEventData.isOnlineEvent,
+              responses: newEventData.responses,
+              game: newEventData.game,
+            },
+          },
+          { merge: true }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
+    try {
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
     }
 
     return;

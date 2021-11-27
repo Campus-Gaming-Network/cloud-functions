@@ -28,46 +28,48 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
       );
     }
 
-    if (changes.length > 0) {
-      const teammatesQuery = db
-        .collection(COLLECTIONS.TEAMMATES)
-        .where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
+    if (changes.length === 0) {
+      return;
+    }
 
-      console.log(
-        `Team updated ${context.params.userId} updated: ${changes.join(", ")}`
-      );
+    const teammatesQuery = db
+      .collection(COLLECTIONS.TEAMMATES)
+      .where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
 
-      let batch = db.batch();
+    console.log(
+      `Team updated ${context.params.userId} updated: ${changes.join(", ")}`
+    );
 
-      try {
-        const snapshot = await teammatesQuery.get();
+    let batch = db.batch();
 
-        if (snapshot.empty) {
-          return;
-        }
+    try {
+      const snapshot = await teammatesQuery.get();
 
-        snapshot.forEach((doc) => {
-          batch.set(
-            doc.ref,
-            {
-              team: {
-                name: newUserData.name,
-                shortName: newUserData.shortName,
-              },
-            },
-            { merge: true }
-          );
-        });
-      } catch (error) {
-        console.log(error);
+      if (snapshot.empty) {
         return;
       }
 
-      try {
-        await batch.commit();
-      } catch (error) {
-        console.log(error);
-      }
+      snapshot.forEach((doc) => {
+        batch.set(
+          doc.ref,
+          {
+            team: {
+              name: newUserData.name,
+              shortName: newUserData.shortName,
+            },
+          },
+          { merge: true }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
+    try {
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
     }
 
     return;

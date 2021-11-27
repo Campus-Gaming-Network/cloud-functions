@@ -25,50 +25,50 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
       changes.push(changeLog(previousSchoolData.name, newSchoolData.name));
     }
 
-    if (changes.length > 0) {
-      const schoolDocRef = db
-        .collection(COLLECTIONS.SCHOOLS)
-        .doc(context.params.schoolId);
-      const eventResponsesQuery = db
-        .collection(COLLECTIONS.EVENT_RESPONSES)
-        .where("school.ref", QUERY_OPERATORS.EQUAL_TO, schoolDocRef);
+    if (changes.length === 0) {
+      return;
+    }
 
-      console.log(
-        `School updated ${context.params.schoolId} updated: ${changes.join(
-          ", "
-        )}`
-      );
+    const schoolDocRef = db
+      .collection(COLLECTIONS.SCHOOLS)
+      .doc(context.params.schoolId);
+    const eventResponsesQuery = db
+      .collection(COLLECTIONS.EVENT_RESPONSES)
+      .where("school.ref", QUERY_OPERATORS.EQUAL_TO, schoolDocRef);
 
-      let batch = db.batch();
+    console.log(
+      `School updated ${context.params.schoolId} updated: ${changes.join(", ")}`
+    );
 
-      try {
-        const snapshot = await eventResponsesQuery.get();
+    let batch = db.batch();
 
-        if (snapshot.empty) {
-          return;
-        }
+    try {
+      const snapshot = await eventResponsesQuery.get();
 
-        snapshot.forEach((doc) => {
-          batch.set(
-            doc.ref,
-            {
-              school: {
-                name: newSchoolData.name,
-              },
-            },
-            { merge: true }
-          );
-        });
-      } catch (error) {
-        console.log(error);
+      if (snapshot.empty) {
         return;
       }
 
-      try {
-        await batch.commit();
-      } catch (error) {
-        console.log(error);
-      }
+      snapshot.forEach((doc) => {
+        batch.set(
+          doc.ref,
+          {
+            school: {
+              name: newSchoolData.name,
+            },
+          },
+          { merge: true }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
+    try {
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
     }
 
     return;

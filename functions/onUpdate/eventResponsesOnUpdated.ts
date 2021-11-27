@@ -27,45 +27,47 @@ exports.eventResponsesOnUpdated = functions.firestore
       );
     }
 
-    if (changes.length > 0) {
-      const eventRef = db
-        .collection(COLLECTIONS.EVENTS)
-        .doc(newEventResponseData.event.id);
+    if (changes.length === 0) {
+      return;
+    }
 
-      console.log(
-        `Event Response ${
-          context.params.eventResponseId
-        } updated: ${changes.join(", ")}`
-      );
+    const eventRef = db
+      .collection(COLLECTIONS.EVENTS)
+      .doc(newEventResponseData.event.id);
 
-      if (newEventResponseData.response === EVENT_RESPONSES.YES) {
-        try {
-          await eventRef.set(
-            {
-              responses: {
-                no: admin.firestore.FieldValue.increment(-1),
-                yes: admin.firestore.FieldValue.increment(1),
-              },
+    console.log(
+      `Event Response ${context.params.eventResponseId} updated: ${changes.join(
+        ", "
+      )}`
+    );
+
+    if (newEventResponseData.response === EVENT_RESPONSES.YES) {
+      try {
+        await eventRef.set(
+          {
+            responses: {
+              no: admin.firestore.FieldValue.increment(-1),
+              yes: admin.firestore.FieldValue.increment(1),
             },
-            { merge: true }
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      } else if (newEventResponseData.response === EVENT_RESPONSES.NO) {
-        try {
-          await eventRef.set(
-            {
-              responses: {
-                yes: admin.firestore.FieldValue.increment(-1),
-                no: admin.firestore.FieldValue.increment(1),
-              },
+          },
+          { merge: true }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (newEventResponseData.response === EVENT_RESPONSES.NO) {
+      try {
+        await eventRef.set(
+          {
+            responses: {
+              yes: admin.firestore.FieldValue.increment(-1),
+              no: admin.firestore.FieldValue.increment(1),
             },
-            { merge: true }
-          );
-        } catch (error) {
-          console.log(error);
-        }
+          },
+          { merge: true }
+        );
+      } catch (error) {
+        console.log(error);
       }
     }
 

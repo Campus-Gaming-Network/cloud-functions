@@ -42,56 +42,58 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
       );
     }
 
-    if (changes.length > 0) {
-      const userDocRef = db
-        .collection(COLLECTIONS.USERS)
-        .doc(context.params.userId);
-      const eventResponsesQuery = db
-        .collection(COLLECTIONS.EVENT_RESPONSES)
-        .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+    if (changes.length === 0) {
+      return;
+    }
 
-      console.log(
-        `User updated ${context.params.userId} updated: ${changes.join(", ")}`
-      );
+    const userDocRef = db
+      .collection(COLLECTIONS.USERS)
+      .doc(context.params.userId);
+    const eventResponsesQuery = db
+      .collection(COLLECTIONS.EVENT_RESPONSES)
+      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
-      let batch = db.batch();
+    console.log(
+      `User updated ${context.params.userId} updated: ${changes.join(", ")}`
+    );
 
-      try {
-        const snapshot = await eventResponsesQuery.get();
+    let batch = db.batch();
 
-        if (snapshot.empty) {
-          return;
-        }
+    try {
+      const snapshot = await eventResponsesQuery.get();
 
-        snapshot.forEach((doc) => {
-          batch.set(
-            doc.ref,
-            {
-              user: {
-                firstName: newUserData.firstName,
-                lastName: newUserData.lastName,
-                gravatar: newUserData.gravatar,
-                status: newUserData.status,
-                school: {
-                  id: newUserData.school.id,
-                  ref: newUserData.school.ref,
-                  name: newUserData.school.name,
-                },
-              },
-            },
-            { merge: true }
-          );
-        });
-      } catch (error) {
-        console.log(error);
+      if (snapshot.empty) {
         return;
       }
 
-      try {
-        await batch.commit();
-      } catch (error) {
-        console.log(error);
-      }
+      snapshot.forEach((doc) => {
+        batch.set(
+          doc.ref,
+          {
+            user: {
+              firstName: newUserData.firstName,
+              lastName: newUserData.lastName,
+              gravatar: newUserData.gravatar,
+              status: newUserData.status,
+              school: {
+                id: newUserData.school.id,
+                ref: newUserData.school.ref,
+                name: newUserData.school.name,
+              },
+            },
+          },
+          { merge: true }
+        );
+      });
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+
+    try {
+      await batch.commit();
+    } catch (error) {
+      console.log(error);
     }
 
     return;

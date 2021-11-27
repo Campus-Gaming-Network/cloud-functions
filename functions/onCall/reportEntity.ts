@@ -5,17 +5,11 @@ import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
 // reportEntity
 exports.reportEntity = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
-      "Invalid request"
-    );
+    throw new InvalidRequestError();
   }
 
   if (!context.auth || !context.auth.uid) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
-      "Not authorized"
-    );
+    throw new NotAuthorizedError();
   }
 
   const reportData = {

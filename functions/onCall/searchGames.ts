@@ -46,10 +46,7 @@ exports.searchGames = functions.https.onCall(async (data, context) => {
     !IGDB_CLIENT_SECRET ||
     !IGDB_GRANT_TYPE
   ) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
-      "Invalid request"
-    );
+    throw new InvalidRequestError();
   }
 
   const configsQueryRef = db
