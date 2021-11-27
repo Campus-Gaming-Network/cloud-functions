@@ -1,6 +1,6 @@
-import { auth, db, functions } from "../firebase";
-import { isValidEmail } from "../utils";
-import { COLLECTIONS } from "../constants";
+import { auth, db, functions } from '../firebase';
+import { isValidEmail } from '../utils';
+import { COLLECTIONS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchUsers
@@ -16,12 +16,12 @@ exports.searchUsers = functions.https.onCall(async (data, context) => {
 
   // TODO: Only allow admins access to this route
   try {
-    const query = data.query ? data.query.trim() : "";
+    const query = data.query ? data.query.trim() : '';
 
     let authRecord;
     let record;
 
-    if (query && query !== "") {
+    if (query && query !== '') {
       const isEmailQuery = isValidEmail(query);
 
       if (isEmailQuery) {
@@ -31,10 +31,7 @@ exports.searchUsers = functions.https.onCall(async (data, context) => {
       }
 
       if (authRecord && authRecord.uid) {
-        record = await db
-          .collection(COLLECTIONS.USERS)
-          .doc(authRecord.uid)
-          .get();
+        record = await db.collection(COLLECTIONS.USERS).doc(authRecord.uid).get();
       }
     }
 

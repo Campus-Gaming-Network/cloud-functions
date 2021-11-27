@@ -1,10 +1,6 @@
-import { db, functions } from "../firebase";
-import {
-  COLLECTIONS,
-  TEAM_ROLES,
-  FUNCTIONS_ERROR_CODES,
-  QUERY_OPERATORS,
-} from "../constants";
+import { db, functions } from '../firebase';
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
+import { InvalidRequestError, NotAuthorizedError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // kickTeammate
@@ -18,24 +14,15 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Team id required"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
   }
 
   if (!data.teammateId || !data.teammateId.trim()) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Teammate id required"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Teammate id required');
   }
 
   if (data.teammateId === context.auth.uid) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "You cannot kick yourself"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'You cannot kick yourself');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -53,15 +40,11 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.NOT_FOUND,
-      "Invalid team"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
-  const isTeamOfficer =
-    Boolean(team.roles.officer) && team.roles.officer.id === context.auth.uid;
+  const isTeamOfficer = Boolean(team.roles.officer) && team.roles.officer.id === context.auth.uid;
 
   if (isTeamLeader || isTeamOfficer) {
     const userDocRef = db.collection(COLLECTIONS.USERS).doc(data.teammateId);
@@ -69,8 +52,8 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
     try {
       const teammatesSnapshot = await db
         .collection(COLLECTIONS.TEAMMATES)
-        .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef)
-        .where("team.ref", QUERY_OPERATORS.EQUAL_TO, teamDocRef)
+        .where('user.ref', QUERY_OPERATORS.EQUAL_TO, userDocRef)
+        .where('team.ref', QUERY_OPERATORS.EQUAL_TO, teamDocRef)
         .limit(1)
         .get();
 
@@ -81,10 +64,7 @@ exports.kickTeammate = functions.https.onCall(async (data, context) => {
       throw new functions.https.HttpsError(error.code, error.message);
     }
   } else {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.PERMISSION_DENIED,
-      "Not authorized"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.PERMISSION_DENIED, 'Not authorized');
   }
 
   return { success: true };

@@ -1,14 +1,7 @@
-import { db, functions } from "../firebase";
-import {
-  COLLECTIONS,
-  CHALLONGE_API_KEY,
-  FUNCTIONS_ERROR_CODES,
-} from "../constants";
-import {
-  EmailVerificationEror,
-  InvalidRequestError,
-  NotAuthorizedError,
-} from "../errors";
+import { db, functions } from '../firebase';
+import * as rp from 'request-promise';
+import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES } from '../constants';
+import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTournament
@@ -26,64 +19,55 @@ exports.createTournament = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Tournament name required"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Tournament name required');
   }
 
   let challongeResponse;
 
   try {
     challongeResponse = await rp({
-      method: "POST",
-      uri: "https://api.challonge.com/v1/tournaments.json",
+      method: 'POST',
+      uri: 'https://api.challonge.com/v1/tournaments.json',
       json: true,
       body: {
         api_key: CHALLONGE_API_KEY,
-        "tournament[name]": data.name,
-        "tournament[tournament_type]": data.tournamentFormat,
-        "tournament[url]": "",
-        "tournament[subdomain]": "",
-        "tournament[description]": data.description,
-        "tournament[open_signup]": "",
-        "tournament[hold_third_place_match]": data.holdThirdPlaceMatch,
-        "tournament[pts_for_match_win]": data.ptsForMatchWin,
-        "tournament[pts_for_match_tie]": data.ptsForMatchTie,
-        "tournament[pts_for_game_win]": data.ptsForGameWin,
-        "tournament[pts_for_game_tie]": data.ptsForGameTie,
-        "tournament[pts_for_bye]": data.ptsForBye,
-        "tournament[swiss_rounds]": "",
-        "tournament[ranked_by]": data.rankedBy,
-        "tournament[rr_pts_for_match_win]": data.rrPtsForMatchWin,
-        "tournament[rr_pts_for_match_tie]": data.rrPtsForMatchTie,
-        "tournament[rr_pts_for_game_win]": data.rrPtsForGameWin,
-        "tournament[rr_pts_for_game_tie]": data.rrPtsForGameTie,
-        "tournament[accept_attachments]": "",
-        "tournament[hide_forum]": "",
-        "tournament[show_rounds]": "",
-        "tournament[private]": "",
-        "tournament[notify_users_when_matches_open]": "",
-        "tournament[notify_users_when_the_tournament_ends]": "",
-        "tournament[sequential_pairings]": "",
-        "tournament[signup_cap]": "",
-        "tournament[start_at]": "",
-        "tournament[check_in_duration]": "",
-        "tournament[grand_finals_modifier]": "",
+        'tournament[name]': data.name,
+        'tournament[tournament_type]': data.tournamentFormat,
+        'tournament[url]': '',
+        'tournament[subdomain]': '',
+        'tournament[description]': data.description,
+        'tournament[open_signup]': '',
+        'tournament[hold_third_place_match]': data.holdThirdPlaceMatch,
+        'tournament[pts_for_match_win]': data.ptsForMatchWin,
+        'tournament[pts_for_match_tie]': data.ptsForMatchTie,
+        'tournament[pts_for_game_win]': data.ptsForGameWin,
+        'tournament[pts_for_game_tie]': data.ptsForGameTie,
+        'tournament[pts_for_bye]': data.ptsForBye,
+        'tournament[swiss_rounds]': '',
+        'tournament[ranked_by]': data.rankedBy,
+        'tournament[rr_pts_for_match_win]': data.rrPtsForMatchWin,
+        'tournament[rr_pts_for_match_tie]': data.rrPtsForMatchTie,
+        'tournament[rr_pts_for_game_win]': data.rrPtsForGameWin,
+        'tournament[rr_pts_for_game_tie]': data.rrPtsForGameTie,
+        'tournament[accept_attachments]': '',
+        'tournament[hide_forum]': '',
+        'tournament[show_rounds]': '',
+        'tournament[private]': '',
+        'tournament[notify_users_when_matches_open]': '',
+        'tournament[notify_users_when_the_tournament_ends]': '',
+        'tournament[sequential_pairings]': '',
+        'tournament[signup_cap]': '',
+        'tournament[start_at]': '',
+        'tournament[check_in_duration]': '',
+        'tournament[grand_finals_modifier]': '',
       },
     });
   } catch (error) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.UNKNOWN,
-      "Challonge error"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, 'Challonge error');
   }
 
   if (challongeResponse.errors) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.UNKNOWN,
-      challongeResponse.errors.join("; ")
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.UNKNOWN, challongeResponse.errors.join('; '));
   }
 
   let tournamentDocRef;

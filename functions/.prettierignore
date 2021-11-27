@@ -2,3 +2,5 @@
 build
 .vercel
 .husky
+lib/
+node_modules/

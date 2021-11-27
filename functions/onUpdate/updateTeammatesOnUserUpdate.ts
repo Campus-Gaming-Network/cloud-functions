@@ -1,6 +1,6 @@
-import { db, functions } from "../firebase";
-import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
+import { db, functions } from '../firebase';
+import { changeLog } from '../utils';
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateTeammatesOnUserUpdate
@@ -19,9 +19,7 @@ exports.updateTeammatesOnUserUpdate = functions.firestore
     const changes = [];
 
     if (previousUserData.firstName !== newUserData.firstName) {
-      changes.push(
-        changeLog(previousUserData.firstName, newUserData.firstName)
-      );
+      changes.push(changeLog(previousUserData.firstName, newUserData.firstName));
     }
 
     if (previousUserData.lastName !== newUserData.lastName) {
@@ -37,27 +35,19 @@ exports.updateTeammatesOnUserUpdate = functions.firestore
     }
 
     if (previousUserData.school.id !== newUserData.school.id) {
-      changes.push(
-        changeLog(previousUserData.school.id, newUserData.school.id)
-      );
+      changes.push(changeLog(previousUserData.school.id, newUserData.school.id));
     }
 
     if (changes.length === 0) {
       return;
     }
 
-    const userDocRef = db
-      .collection(COLLECTIONS.USERS)
-      .doc(context.params.userId);
-    const teammtesQuery = db
-      .collection(COLLECTIONS.TEAMMATES)
-      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+    const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
+    const teammtesQuery = db.collection(COLLECTIONS.TEAMMATES).where('user.ref', QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
-    console.log(
-      `User ${context.params.userId} updated: ${changes.join(", ")}`
-    );
+    console.log(`User ${context.params.userId} updated: ${changes.join(', ')}`);
 
-    let batch = db.batch();
+    const batch = db.batch();
 
     try {
       const snapshot = await teammtesQuery.get();

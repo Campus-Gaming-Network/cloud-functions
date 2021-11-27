@@ -1,9 +1,6 @@
-import { db, functions } from "../firebase";
-import {
-  COLLECTIONS,
-  FUNCTIONS_ERROR_CODES,
-  QUERY_OPERATORS,
-} from "../constants";
+import { db, functions } from '../firebase';
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
+import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // leaveTeam
@@ -21,10 +18,7 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.teamId || !data.teamId.trim()) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Team id required"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team id required');
   }
 
   const teamDocRef = db.collection(COLLECTIONS.TEAMS).doc(data.teamId);
@@ -42,10 +36,7 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!team) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.NOT_FOUND,
-      "Invalid team"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.NOT_FOUND, 'Invalid team');
   }
 
   const isTeamLeader = team.roles.leader.id === context.auth.uid;
@@ -54,7 +45,7 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   if (isTeamLeader && hasOtherMembers) {
     throw new functions.https.HttpsError(
       FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "You must assign a new leader before leaving the team"
+      'You must assign a new leader before leaving the team',
     );
   }
 
@@ -63,8 +54,8 @@ exports.leaveTeam = functions.https.onCall(async (data, context) => {
   try {
     const teammatesSnapshot = await db
       .collection(COLLECTIONS.TEAMMATES)
-      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef)
-      .where("team.ref", QUERY_OPERATORS.EQUAL_TO, teamDocRef)
+      .where('user.ref', QUERY_OPERATORS.EQUAL_TO, userDocRef)
+      .where('team.ref', QUERY_OPERATORS.EQUAL_TO, teamDocRef)
       .limit(1)
       .get();
 

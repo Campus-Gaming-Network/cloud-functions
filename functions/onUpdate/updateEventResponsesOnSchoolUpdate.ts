@@ -1,6 +1,6 @@
-import { db, functions } from "../firebase";
-import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
+import { db, functions } from '../firebase';
+import { changeLog } from '../utils';
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnSchoolUpdate
@@ -29,18 +29,14 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
       return;
     }
 
-    const schoolDocRef = db
-      .collection(COLLECTIONS.SCHOOLS)
-      .doc(context.params.schoolId);
+    const schoolDocRef = db.collection(COLLECTIONS.SCHOOLS).doc(context.params.schoolId);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
-      .where("school.ref", QUERY_OPERATORS.EQUAL_TO, schoolDocRef);
+      .where('school.ref', QUERY_OPERATORS.EQUAL_TO, schoolDocRef);
 
-    console.log(
-      `School ${context.params.schoolId} updated: ${changes.join(", ")}`
-    );
+    console.log(`School ${context.params.schoolId} updated: ${changes.join(', ')}`);
 
-    let batch = db.batch();
+    const batch = db.batch();
 
     try {
       const snapshot = await eventResponsesQuery.get();
@@ -57,7 +53,7 @@ exports.updateEventResponsesOnSchoolUpdate = functions.firestore
               name: newSchoolData.name,
             },
           },
-          { merge: true }
+          { merge: true },
         );
       });
     } catch (error) {

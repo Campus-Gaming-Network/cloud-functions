@@ -1,5 +1,5 @@
-import { functions } from "../firebase";
-import { algoliaSearchIndex } from "../algolia";
+import { functions } from '../firebase';
+import { algoliaSearchIndex } from '../algolia';
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchSchools

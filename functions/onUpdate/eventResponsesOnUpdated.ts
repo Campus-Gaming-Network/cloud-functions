@@ -1,6 +1,6 @@
-import { admin, db, functions } from "../firebase";
-import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from "../constants";
+import { admin, db, functions } from '../firebase';
+import { changeLog } from '../utils';
+import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnUpdated
@@ -19,27 +19,16 @@ exports.eventResponsesOnUpdated = functions.firestore
     const changes = [];
 
     if (previousEventResponseData.response !== newEventResponseData.response) {
-      changes.push(
-        changeLog(
-          previousEventResponseData.response,
-          newEventResponseData.response
-        )
-      );
+      changes.push(changeLog(previousEventResponseData.response, newEventResponseData.response));
     }
 
     if (changes.length === 0) {
       return;
     }
 
-    const eventRef = db
-      .collection(COLLECTIONS.EVENTS)
-      .doc(newEventResponseData.event.id);
+    const eventRef = db.collection(COLLECTIONS.EVENTS).doc(newEventResponseData.event.id);
 
-    console.log(
-      `Event Response ${context.params.eventResponseId} updated: ${changes.join(
-        ", "
-      )}`
-    );
+    console.log(`Event Response ${context.params.eventResponseId} updated: ${changes.join(', ')}`);
 
     if (newEventResponseData.response === EVENT_RESPONSES.YES) {
       try {
@@ -50,7 +39,7 @@ exports.eventResponsesOnUpdated = functions.firestore
               yes: admin.firestore.FieldValue.increment(1),
             },
           },
-          { merge: true }
+          { merge: true },
         );
       } catch (error) {
         console.log(error);
@@ -64,7 +53,7 @@ exports.eventResponsesOnUpdated = functions.firestore
               no: admin.firestore.FieldValue.increment(1),
             },
           },
-          { merge: true }
+          { merge: true },
         );
       } catch (error) {
         console.log(error);

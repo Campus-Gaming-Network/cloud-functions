@@ -1,5 +1,5 @@
-import { admin, db, functions } from "../firebase";
-import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from "../constants";
+import { admin, db, functions } from '../firebase';
+import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnDelete
@@ -17,9 +17,7 @@ exports.eventResponsesOnDelete = functions.firestore
       const deletedData = snapshot.data();
 
       if (deletedData) {
-        const eventRef = db
-          .collection(COLLECTIONS.EVENTS)
-          .doc(deletedData.event.id);
+        const eventRef = db.collection(COLLECTIONS.EVENTS).doc(deletedData.event.id);
 
         let eventDoc;
 
@@ -35,19 +33,13 @@ exports.eventResponsesOnDelete = functions.firestore
 
         if (deletedData.response === EVENT_RESPONSES.YES) {
           try {
-            await eventRef.set(
-              { responses: { yes: admin.firestore.FieldValue.increment(-1) } },
-              { merge: true }
-            );
+            await eventRef.set({ responses: { yes: admin.firestore.FieldValue.increment(-1) } }, { merge: true });
           } catch (error) {
             return;
           }
         } else if (deletedData.response === EVENT_RESPONSES.NO) {
           try {
-            await eventRef.set(
-              { responses: { no: admin.firestore.FieldValue.increment(-1) } },
-              { merge: true }
-            );
+            await eventRef.set({ responses: { no: admin.firestore.FieldValue.increment(-1) } }, { merge: true });
           } catch (error) {
             return;
           }

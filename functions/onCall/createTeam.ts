@@ -1,11 +1,7 @@
-import { db, functions } from "../firebase";
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
-import { hashPassword } from "../utils";
-import {
-  EmailVerificationEror,
-  InvalidRequestError,
-  NotAuthorizedError,
-} from "../errors";
+import { db, functions } from '../firebase';
+import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from '../constants';
+import { hashPassword } from '../utils';
+import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTeam
@@ -23,31 +19,19 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!data.name || !data.name.trim()) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Team name required"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name required');
   }
 
   if (data.name.length > 255) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Team name too long"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team name too long');
   }
 
   if (!data.password || !data.password.trim()) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Team password required"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password required');
   }
 
   if (data.password.length > 255) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION,
-      "Team password too long"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.FAILED_PRECONDITION, 'Team password too long');
   }
 
   const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.auth.uid);
@@ -65,16 +49,11 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
   }
 
   if (!user) {
-    throw new functions.https.HttpsError(
-      FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT,
-      "Invalid user"
-    );
+    throw new functions.https.HttpsError(FUNCTIONS_ERROR_CODES.INVALID_ARGUMENT, 'Invalid user');
   }
 
   const shortName = data.shortName ? data.shortName.trim() : data.shortName;
-  const description = data.description
-    ? data.description.trim()
-    : data.description;
+  const description = data.description ? data.description.trim() : data.description;
   const website = data.website ? data.website.trim() : data.website;
 
   const teamData = {
@@ -140,7 +119,7 @@ exports.createTeam = functions.https.onCall(async (data, context) => {
       id: teamDocRef.id,
       ref: teamDocRef,
     },
-    joinHash: joinHash,
+    joinHash,
   };
 
   try {

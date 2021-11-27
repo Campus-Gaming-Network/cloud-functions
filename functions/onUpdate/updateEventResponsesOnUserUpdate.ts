@@ -1,6 +1,6 @@
-import { db, functions } from "../firebase";
-import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
+import { db, functions } from '../firebase';
+import { changeLog } from '../utils';
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnUserUpdate
@@ -19,9 +19,7 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
     const changes = [];
 
     if (previousUserData.firstName !== newUserData.firstName) {
-      changes.push(
-        changeLog(previousUserData.firstName, newUserData.firstName)
-      );
+      changes.push(changeLog(previousUserData.firstName, newUserData.firstName));
     }
 
     if (previousUserData.lastName !== newUserData.lastName) {
@@ -37,27 +35,21 @@ exports.updateEventResponsesOnUserUpdate = functions.firestore
     }
 
     if (previousUserData.school.id !== newUserData.school.id) {
-      changes.push(
-        changeLog(previousUserData.school.id, newUserData.school.id)
-      );
+      changes.push(changeLog(previousUserData.school.id, newUserData.school.id));
     }
 
     if (changes.length === 0) {
       return;
     }
 
-    const userDocRef = db
-      .collection(COLLECTIONS.USERS)
-      .doc(context.params.userId);
+    const userDocRef = db.collection(COLLECTIONS.USERS).doc(context.params.userId);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
-      .where("user.ref", QUERY_OPERATORS.EQUAL_TO, userDocRef);
+      .where('user.ref', QUERY_OPERATORS.EQUAL_TO, userDocRef);
 
-    console.log(
-      `User ${context.params.userId} updated: ${changes.join(", ")}`
-    );
+    console.log(`User ${context.params.userId} updated: ${changes.join(', ')}`);
 
-    let batch = db.batch();
+    const batch = db.batch();
 
     try {
       const snapshot = await eventResponsesQuery.get();

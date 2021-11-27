@@ -1,6 +1,6 @@
-import { db, functions } from "../firebase";
-import { shallowEqual, changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
+import { db, functions } from '../firebase';
+import { shallowEqual, changeLog } from '../utils';
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnEventUpdate
@@ -27,33 +27,23 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
     }
 
     if (previousEventData.description !== newEventData.description) {
-      changes.push(
-        changeLog(previousEventData.description, newEventData.description)
-      );
+      changes.push(changeLog(previousEventData.description, newEventData.description));
     }
 
     if (previousEventData.startDateTime !== newEventData.startDateTime) {
-      changes.push(
-        changeLog(previousEventData.startDateTime, newEventData.startDateTime)
-      );
+      changes.push(changeLog(previousEventData.startDateTime, newEventData.startDateTime));
     }
 
     if (previousEventData.endDateTime !== newEventData.endDateTime) {
-      changes.push(
-        changeLog(previousEventData.endDateTime, newEventData.endDateTime)
-      );
+      changes.push(changeLog(previousEventData.endDateTime, newEventData.endDateTime));
     }
 
     if (previousEventData.isOnlineEvent !== newEventData.isOnlineEvent) {
-      changes.push(
-        changeLog(previousEventData.isOnlineEvent, newEventData.isOnlineEvent)
-      );
+      changes.push(changeLog(previousEventData.isOnlineEvent, newEventData.isOnlineEvent));
     }
 
     if (!shallowEqual(previousEventData.responses, newEventData.responses)) {
-      changes.push(
-        changeLog(previousEventData.responses, newEventData.responses)
-      );
+      changes.push(changeLog(previousEventData.responses, newEventData.responses));
     }
 
     if (!shallowEqual(previousEventData.game, newEventData.game)) {
@@ -64,18 +54,14 @@ exports.updateEventResponsesOnEventUpdate = functions.firestore
       return;
     }
 
-    const eventDocRef = db
-      .collection(COLLECTIONS.EVENTS)
-      .doc(context.params.eventId);
+    const eventDocRef = db.collection(COLLECTIONS.EVENTS).doc(context.params.eventId);
     const eventResponsesQuery = db
       .collection(COLLECTIONS.EVENT_RESPONSES)
-      .where("event.ref", QUERY_OPERATORS.EQUAL_TO, eventDocRef);
+      .where('event.ref', QUERY_OPERATORS.EQUAL_TO, eventDocRef);
 
-    console.log(
-      `Event ${context.params.eventId} updated: ${changes.join(", ")}`
-    );
+    console.log(`Event ${context.params.eventId} updated: ${changes.join(', ')}`);
 
-    let batch = db.batch();
+    const batch = db.batch();
 
     try {
       const snapshot = await eventResponsesQuery.get();

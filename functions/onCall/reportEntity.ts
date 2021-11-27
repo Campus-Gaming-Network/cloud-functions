@@ -1,5 +1,6 @@
-import { db, functions } from "../firebase";
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from "../constants";
+import { db, functions } from '../firebase';
+import { COLLECTIONS } from '../constants';
+import { InvalidRequestError, NotAuthorizedError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // reportEntity
@@ -21,16 +22,13 @@ exports.reportEntity = functions.https.onCall(async (data, context) => {
     metadata: data.metadata,
     entity: data.entity,
     reportedEntity: {},
-    status: "new",
+    status: 'new',
   };
 
   let reportedEntityDoc;
 
   try {
-    reportedEntityDoc = await db
-      .collection(data.entity.type)
-      .doc(data.entity.id)
-      .get();
+    reportedEntityDoc = await db.collection(data.entity.type).doc(data.entity.id).get();
   } catch (error: any) {
     throw new functions.https.HttpsError(error.code, error.message);
   }

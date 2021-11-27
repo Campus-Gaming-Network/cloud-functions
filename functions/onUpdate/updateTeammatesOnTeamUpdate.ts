@@ -1,6 +1,6 @@
-import { db, functions } from "../firebase";
-import { changeLog } from "../utils";
-import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from "../constants";
+import { db, functions } from '../firebase';
+import { changeLog } from '../utils';
+import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateTeammatesOnTeamUpdate
@@ -23,9 +23,7 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
     }
 
     if (previousTeamData.shortName !== newUserData.shortName) {
-      changes.push(
-        changeLog(previousTeamData.shortName, newUserData.shortName)
-      );
+      changes.push(changeLog(previousTeamData.shortName, newUserData.shortName));
     }
 
     if (changes.length === 0) {
@@ -34,13 +32,11 @@ exports.updateTeammatesOnTeamUpdate = functions.firestore
 
     const teammatesQuery = db
       .collection(COLLECTIONS.TEAMMATES)
-      .where("team.id", QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
+      .where('team.id', QUERY_OPERATORS.EQUAL_TO, context.params.teamId);
 
-    console.log(
-      `Team ${context.params.userId} updated: ${changes.join(", ")}`
-    );
+    console.log(`Team ${context.params.userId} updated: ${changes.join(', ')}`);
 
-    let batch = db.batch();
+    const batch = db.batch();
 
     try {
       const snapshot = await teammatesQuery.get();

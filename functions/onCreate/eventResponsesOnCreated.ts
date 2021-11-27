@@ -1,5 +1,5 @@
-import { admin, db, functions } from "../firebase";
-import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from "../constants";
+import { admin, db, functions } from '../firebase';
+import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnCreated
@@ -18,25 +18,17 @@ exports.eventResponsesOnCreated = functions.firestore
     }
 
     const eventResponseData = snapshot.data();
-    const eventRef = db
-      .collection(COLLECTIONS.EVENTS)
-      .doc(eventResponseData.event.id);
+    const eventRef = db.collection(COLLECTIONS.EVENTS).doc(eventResponseData.event.id);
 
     if (eventResponseData.response === EVENT_RESPONSES.YES) {
       try {
-        await eventRef.set(
-          { responses: { yes: admin.firestore.FieldValue.increment(1) } },
-          { merge: true }
-        );
+        await eventRef.set({ responses: { yes: admin.firestore.FieldValue.increment(1) } }, { merge: true });
       } catch (error) {
         console.log(error);
       }
     } else if (eventResponseData.response === EVENT_RESPONSES.NO) {
       try {
-        await eventRef.set(
-          { responses: { no: admin.firestore.FieldValue.increment(1) } },
-          { merge: true }
-        );
+        await eventRef.set({ responses: { no: admin.firestore.FieldValue.increment(1) } }, { merge: true });
       } catch (error) {
         console.log(error);
       }
