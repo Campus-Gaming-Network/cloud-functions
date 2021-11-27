@@ -1,5 +1,5 @@
 import { db, functions } from '../firebase';
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
+import { COLLECTIONS, QUERY_OPERATORS } from '../constants';
 import { InvalidRequestError, NotAuthorizedError, NotFoundError, ValidationError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////

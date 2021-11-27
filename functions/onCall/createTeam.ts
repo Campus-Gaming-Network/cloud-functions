@@ -1,5 +1,5 @@
 import { db, functions } from '../firebase';
-import { COLLECTIONS, FUNCTIONS_ERROR_CODES } from '../constants';
+import { COLLECTIONS } from '../constants';
 import { hashPassword } from '../utils';
 import {
   EmailVerificationEror,
