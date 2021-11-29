@@ -10,7 +10,7 @@ import {
 
 ////////////////////////////////////////////////////////////////////////////////
 // leaveTeam
-exports.leaveTeam = functions.https.onCall(async (data, context) => {
+export const leaveTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

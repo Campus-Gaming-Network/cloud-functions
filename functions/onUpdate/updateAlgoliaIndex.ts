@@ -4,7 +4,7 @@ import { DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateAlgoliaIndex
-exports.updateAlgoliaIndex = functions.firestore.document(DOCUMENT_PATHS.SCHOOL).onUpdate((change) => {
+export const updateAlgoliaIndex = functions.firestore.document(DOCUMENT_PATHS.SCHOOL).onUpdate((change) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Updates the school in Algolia whenever the school gets updated in firestore.

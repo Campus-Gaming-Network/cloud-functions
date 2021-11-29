@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnDelete
-exports.eventResponsesOnDelete = functions.firestore
+export const eventResponsesOnDelete = functions.firestore
   .document(DOCUMENT_PATHS.EVENT_RESPONSES)
   .onDelete(async (snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////

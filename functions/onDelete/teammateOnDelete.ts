@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // teammateOnDelete
-exports.teammateOnDelete = functions.firestore.document(DOCUMENT_PATHS.TEAMMATES).onDelete(async (snapshot) => {
+export const teammateOnDelete = functions.firestore.document(DOCUMENT_PATHS.TEAMMATES).onDelete(async (snapshot) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // If a teammate document is deleted, find the attached team document if it

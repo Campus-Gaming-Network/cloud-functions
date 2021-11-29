@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnCreated
-exports.eventResponsesOnCreated = functions.firestore
+export const eventResponsesOnCreated = functions.firestore
   .document(DOCUMENT_PATHS.EVENT_RESPONSES)
   .onCreate(async (snapshot) => {
     ////////////////////////////////////////////////////////////////////////////////

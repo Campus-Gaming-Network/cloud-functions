@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // userOnDelete
-exports.userOnDelete = functions.firestore.document(DOCUMENT_PATHS.USER).onDelete(async (snapshot, context) => {
+export const userOnDelete = functions.firestore.document(DOCUMENT_PATHS.USER).onDelete(async (snapshot, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // A user can delete their account whenever they want.

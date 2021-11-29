@@ -4,7 +4,7 @@ import { DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // addAlgoliaIndex
-exports.addAlgoliaIndex = functions.firestore.document(DOCUMENT_PATHS.SCHOOL).onCreate((snapshot) => {
+export const addAlgoliaIndex = functions.firestore.document(DOCUMENT_PATHS.SCHOOL).onCreate((snapshot) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Adds school to the Algolia collection whenever a school document is added to the

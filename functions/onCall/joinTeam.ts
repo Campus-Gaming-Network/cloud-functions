@@ -5,7 +5,7 @@ import { InvalidRequestError, NotAuthorizedError, ValidationError, NotFoundError
 
 ////////////////////////////////////////////////////////////////////////////////
 // joinTeam
-exports.joinTeam = functions.https.onCall(async (data, context) => {
+export const joinTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventOnDelete
-exports.eventOnDelete = functions.firestore.document(DOCUMENT_PATHS.EVENT).onDelete(async (_, context) => {
+export const eventOnDelete = functions.firestore.document(DOCUMENT_PATHS.EVENT).onDelete(async (_, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // If a user deletes an event, find all the event-responses tied to the event and

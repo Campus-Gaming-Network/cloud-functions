@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // trackCreatedUpdated
-exports.trackCreatedUpdated = functions.firestore.document(DOCUMENT_PATHS.WILDCARD).onWrite(async (change, context) => {
+export const trackCreatedUpdated = functions.firestore.document(DOCUMENT_PATHS.WILDCARD).onWrite(async (change, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Source: https://stackoverflow.com/a/60963531

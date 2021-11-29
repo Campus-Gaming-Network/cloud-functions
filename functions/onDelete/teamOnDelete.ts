@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // teamOnDelete
-exports.teamOnDelete = functions.firestore.document(DOCUMENT_PATHS.TEAM).onDelete(async (_, context) => {
+export const teamOnDelete = functions.firestore.document(DOCUMENT_PATHS.TEAM).onDelete(async (_, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // If a user deletes a team, find all the team-auths tied to the team and

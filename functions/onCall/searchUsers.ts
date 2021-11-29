@@ -4,7 +4,7 @@ import { COLLECTIONS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchUsers
-exports.searchUsers = functions.https.onCall(async (data, context) => {
+export const searchUsers = functions.https.onCall(async (data, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Allows admins to query for a user based on uid or email.

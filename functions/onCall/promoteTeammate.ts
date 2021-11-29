@@ -4,7 +4,7 @@ import { InvalidRequestError, NotAuthorizedError, ValidationError, NotFoundError
 
 ////////////////////////////////////////////////////////////////////////////////
 // promoteTeammate
-exports.promoteTeammate = functions.https.onCall(async (data, context) => {
+export const promoteTeammate = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

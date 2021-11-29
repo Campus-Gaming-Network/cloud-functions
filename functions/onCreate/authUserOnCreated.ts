@@ -5,7 +5,7 @@ import * as rp from 'request-promise';
 
 ////////////////////////////////////////////////////////////////////////////////
 // authUserOnCreated
-exports.authUserOnCreated = functions.auth.user().onCreate(async (user) => {
+export const authUserOnCreated = functions.auth.user().onCreate(async (user) => {
   try {
     await rp({
       method: 'POST',

@@ -14,7 +14,7 @@ import { InvalidRequestError, ValidationError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchGames
-exports.searchGames = functions.https.onCall(async (data, context) => {
+export const searchGames = functions.https.onCall(async (data, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Searches IGDB for games matching search query.

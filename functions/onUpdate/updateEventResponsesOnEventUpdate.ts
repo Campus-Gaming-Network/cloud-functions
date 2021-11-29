@@ -4,7 +4,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateEventResponsesOnEventUpdate
-exports.updateEventResponsesOnEventUpdate = functions.firestore
+export const updateEventResponsesOnEventUpdate = functions.firestore
   .document(DOCUMENT_PATHS.EVENT)
   .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////

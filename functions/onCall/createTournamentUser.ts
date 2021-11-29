@@ -14,7 +14,7 @@ const PARTICIPANT_TYPES = ['user', 'team'];
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTournamentParticipant
-exports.createTournamentParticipant = functions.https.onCall(async (data, context) => {
+export const createTournamentParticipant = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

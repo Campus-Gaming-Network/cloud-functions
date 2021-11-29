@@ -4,7 +4,7 @@ import { InvalidRequestError, NotAuthorizedError, NotFoundError, ValidationError
 
 ////////////////////////////////////////////////////////////////////////////////
 // demoteTeammate
-exports.demoteTeammate = functions.https.onCall(async (data, context) => {
+export const demoteTeammate = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

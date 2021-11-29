@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // teammateOnCreated
-exports.teammateOnCreated = functions.firestore.document(DOCUMENT_PATHS.TEAMMATES).onCreate(async (snapshot) => {
+export const teammateOnCreated = functions.firestore.document(DOCUMENT_PATHS.TEAMMATES).onCreate(async (snapshot) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // To keep track of how many people are apart of a team, when a teammate is created

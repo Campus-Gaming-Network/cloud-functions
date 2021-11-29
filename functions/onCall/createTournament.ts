@@ -5,7 +5,7 @@ import { EmailVerificationEror, InvalidRequestError, NotAuthorizedError, Validat
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTournament
-exports.createTournament = functions.https.onCall(async (data, context) => {
+export const createTournament = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

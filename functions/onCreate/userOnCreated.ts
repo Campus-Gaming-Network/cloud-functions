@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // userOnCreated
-exports.userOnCreated = functions.firestore.document(DOCUMENT_PATHS.USER).onCreate(async (snapshot) => {
+export const userOnCreated = functions.firestore.document(DOCUMENT_PATHS.USER).onCreate(async (snapshot) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // To keep track of how many users belong to a school, when a user is created

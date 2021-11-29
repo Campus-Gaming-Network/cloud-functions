@@ -4,7 +4,7 @@ import { DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // removeAlgoliaIndex
-exports.removeAlgoliaIndex = functions.firestore.document(DOCUMENT_PATHS.SCHOOL).onDelete((snapshot) => {
+export const removeAlgoliaIndex = functions.firestore.document(DOCUMENT_PATHS.SCHOOL).onDelete((snapshot) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // If a school document is deleted, remove the document from Algolia so that it

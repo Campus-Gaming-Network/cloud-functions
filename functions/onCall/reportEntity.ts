@@ -4,7 +4,7 @@ import { InvalidRequestError, NotAuthorizedError } from '../errors';
 
 ////////////////////////////////////////////////////////////////////////////////
 // reportEntity
-exports.reportEntity = functions.https.onCall(async (data, context) => {
+export const reportEntity = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

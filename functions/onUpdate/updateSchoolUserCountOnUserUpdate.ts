@@ -3,7 +3,7 @@ import { COLLECTIONS, DOCUMENT_PATHS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateSchoolUserCountOnUserUpdate
-exports.updateSchoolUserCountOnUserUpdate = functions.firestore
+export const updateSchoolUserCountOnUserUpdate = functions.firestore
   .document(DOCUMENT_PATHS.USER)
   .onUpdate(async (change) => {
     ////////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,7 @@ import {
 
 ////////////////////////////////////////////////////////////////////////////////
 // createTeam
-exports.createTeam = functions.https.onCall(async (data, context) => {
+export const createTeam = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }

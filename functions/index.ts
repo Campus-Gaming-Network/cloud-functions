@@ -8,50 +8,50 @@ try {
 
 ////////////////////////////////////////////////////////////////////////////////
 // onCall
-import * as searchGames from './onCall/searchGames';
-import * as searchSchools from './onCall/searchSchools';
-import * as searchUsers from './onCall/searchUsers';
-import * as reportEntity from './onCall/reportEntity';
-import * as createTeam from './onCall/createTeam';
-import * as editTeam from './onCall/editTeam';
-import * as joinTeam from './onCall/joinTeam';
-import * as leaveTeam from './onCall/leaveTeam';
-import * as promoteTeammate from './onCall/promoteTeammate';
-import * as demoteTeammate from './onCall/demoteTeammate';
-import * as kickTeammate from './onCall/kickTeammate';
-import * as createTournament from './onCall/createTournament';
+import {searchGames} from './onCall/searchGames';
+import {searchSchools} from './onCall/searchSchools';
+import {searchUsers} from './onCall/searchUsers';
+import {reportEntity} from './onCall/reportEntity';
+import {createTeam} from './onCall/createTeam';
+import {editTeam} from './onCall/editTeam';
+import {joinTeam} from './onCall/joinTeam';
+import {leaveTeam} from './onCall/leaveTeam';
+import {promoteTeammate} from './onCall/promoteTeammate';
+import {demoteTeammate} from './onCall/demoteTeammate';
+import {kickTeammate} from './onCall/kickTeammate';
+import {createTournament} from './onCall/createTournament';
 
 ////////////////////////////////////////////////////////////////////////////////
 // onWrite
-import * as trackCreatedUpdated from './onWrite/trackCreatedUpdated';
+import {trackCreatedUpdated} from './onWrite/trackCreatedUpdated';
 
 ////////////////////////////////////////////////////////////////////////////////
 // onUpdate
-import * as updateAlgoliaIndex from './onUpdate/updateAlgoliaIndex';
-import * as updateEventResponsesOnEventUpdate from './onUpdate/updateEventResponsesOnEventUpdate';
-import * as updateEventResponsesOnSchoolUpdate from './onUpdate/updateEventResponsesOnSchoolUpdate';
-import * as updateEventResponsesOnUserUpdate from './onUpdate/updateEventResponsesOnUserUpdate';
-import * as updateTeammatesOnUserUpdate from './onUpdate/updateTeammatesOnUserUpdate';
-import * as updateTeammatesOnTeamUpdate from './onUpdate/updateTeammatesOnTeamUpdate';
-import * as eventResponsesOnUpdated from './onUpdate/eventResponsesOnUpdated';
-import * as updateSchoolUserCountOnUserUpdate from './onUpdate/updateSchoolUserCountOnUserUpdate';
+import {updateAlgoliaIndex} from './onUpdate/updateAlgoliaIndex';
+import {updateEventResponsesOnEventUpdate} from './onUpdate/updateEventResponsesOnEventUpdate';
+import {updateEventResponsesOnSchoolUpdate} from './onUpdate/updateEventResponsesOnSchoolUpdate';
+import {updateEventResponsesOnUserUpdate} from './onUpdate/updateEventResponsesOnUserUpdate';
+import {updateTeammatesOnUserUpdate} from './onUpdate/updateTeammatesOnUserUpdate';
+import {updateTeammatesOnTeamUpdate} from './onUpdate/updateTeammatesOnTeamUpdate';
+import {eventResponsesOnUpdated} from './onUpdate/eventResponsesOnUpdated';
+import {updateSchoolUserCountOnUserUpdate} from './onUpdate/updateSchoolUserCountOnUserUpdate';
 
 ////////////////////////////////////////////////////////////////////////////////
 // onCreate
-import * as addAlgoliaIndex from './onCreate/addAlgoliaIndex';
-import * as eventResponsesOnCreated from './onCreate/eventResponsesOnCreated';
-import * as userOnCreated from './onCreate/userOnCreated';
-import * as authUserOnCreated from './onCreate/authUserOnCreated';
-import * as teammateOnCreated from './onCreate/teammateOnCreated';
+import {addAlgoliaIndex} from './onCreate/addAlgoliaIndex';
+import {eventResponsesOnCreated} from './onCreate/eventResponsesOnCreated';
+import {userOnCreated} from './onCreate/userOnCreated';
+import {authUserOnCreated} from './onCreate/authUserOnCreated';
+import {teammateOnCreated} from './onCreate/teammateOnCreated';
 
 ////////////////////////////////////////////////////////////////////////////////
 // onDelete
-import * as removeAlgoliaIndex from './onDelete/removeAlgoliaIndex';
-import * as eventOnDelete from './onDelete/eventOnDelete';
-import * as userOnDelete from './onDelete/userOnDelete';
-import * as eventResponsesOnDelete from './onDelete/eventResponsesOnDelete';
-import * as teamOnDelete from './onDelete/teamOnDelete';
-import * as teammateOnDelete from './onDelete/teammateOnDelete';
+import {removeAlgoliaIndex} from './onDelete/removeAlgoliaIndex';
+import {eventOnDelete} from './onDelete/eventOnDelete';
+import {userOnDelete} from './onDelete/userOnDelete';
+import {eventResponsesOnDelete} from './onDelete/eventResponsesOnDelete';
+import {teamOnDelete} from './onDelete/teamOnDelete';
+import {teammateOnDelete} from './onDelete/teammateOnDelete';
 
 exports.searchGames = searchGames;
 exports.searchSchools = searchSchools;

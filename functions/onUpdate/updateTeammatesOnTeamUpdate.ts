@@ -4,7 +4,7 @@ import { COLLECTIONS, DOCUMENT_PATHS, QUERY_OPERATORS } from '../constants';
 
 ////////////////////////////////////////////////////////////////////////////////
 // updateTeammatesOnTeamUpdate
-exports.updateTeammatesOnTeamUpdate = functions.firestore
+export const updateTeammatesOnTeamUpdate = functions.firestore
   .document(DOCUMENT_PATHS.TEAM)
   .onUpdate(async (change, context) => {
     ////////////////////////////////////////////////////////////////////////////////

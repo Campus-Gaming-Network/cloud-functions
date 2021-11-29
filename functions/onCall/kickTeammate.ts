@@ -4,7 +4,7 @@ import { InvalidRequestError, NotAuthorizedError, NotFoundError, ValidationError
 
 ////////////////////////////////////////////////////////////////////////////////
 // kickTeammate
-exports.kickTeammate = functions.https.onCall(async (data, context) => {
+export const kickTeammate = functions.https.onCall(async (data, context) => {
   if (!data || !context) {
     throw new InvalidRequestError();
   }
