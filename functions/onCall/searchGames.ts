@@ -8,7 +8,7 @@ import {
   FUNCTIONS_ERROR_CODES,
 } from '../constants';
 
-import * as rp from 'request-promise';
+import rp from 'request-promise';
 import { DateTime } from 'luxon';
 import { InvalidRequestError, ValidationError } from '../errors';
 

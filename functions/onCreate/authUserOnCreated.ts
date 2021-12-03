@@ -1,7 +1,7 @@
 import { functions } from '../firebase';
 import { DISCORD_WEBHOOK_URL } from '../constants';
 
-import * as rp from 'request-promise';
+import rp from 'request-promise';
 
 ////////////////////////////////////////////////////////////////////////////////
 // authUserOnCreated

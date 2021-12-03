@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import bcrypt = require('bcrypt');
+import * as bcrypt from 'bcrypt';
 import { NANO_ALPHABET, NANO_ID_LENGTH, SALT_ROUNDS } from './constants';
 
 // Returns a callable function
@@ -30,3 +30,26 @@ export const hashPassword = async (password: string): Promise<string> => await b
 
 export const comparePasswords = async (password: string, hash: string): Promise<boolean> =>
   await bcrypt.compare(password, hash);
+
+export const createEventResponseEmail = (event: { [key: string]: any }): string => {
+  const description = event.description.length > 250
+    ? `${event.description.substring(0,250)}...`
+    : event.description;
+  const startDateTime = new Date(event.startDateTime._seconds * 1000).toString();
+  const endDateTime = new Date(event.endDateTime._seconds * 1000).toString();
+  const where = event.isOnline ? 'Online' : (event.location || 'N/A');
+
+  return `
+  <span><span style='font-weight: bold;'>Event:</span> ${event.name}</span><
+  <br />
+  <span><span style='font-weight: bold;'>Date/Time Start:</span> ${startDateTime}</span>
+  <br />
+  <span><span style='font-weight: bold;'>Date/Time End:</span> ${endDateTime}</span>
+  <br />
+  <span><span style='font-weight: bold;'>Where:</span> ${where}</span>
+  <br />
+  <span><span style='font-weight: bold;'>Details:</span> ${description}</span>
+  <br />
+  <a href="https://campusgamingnetwork.com/event/${event.id}" target="_blank">View Full Event Details</a>
+  `.trim();
+};

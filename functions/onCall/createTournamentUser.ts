@@ -1,5 +1,5 @@
 import { db, functions } from '../firebase';
-import * as rp from 'request-promise';
+import rp from 'request-promise';
 
 import { COLLECTIONS, CHALLONGE_API_KEY, FUNCTIONS_ERROR_CODES, QUERY_OPERATORS } from '../constants';
 import {
