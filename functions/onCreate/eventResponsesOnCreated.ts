@@ -1,7 +1,7 @@
 import { admin, db, functions, auth } from '../firebase';
 import { COLLECTIONS, DOCUMENT_PATHS, EVENT_RESPONSES } from '../constants';
-import { createEventResponseEmail } from "../utils";
-import { sendEventEmail } from "../mailgun";
+import { createEventResponseEmail } from '../utils';
+import { sendEventEmail } from '../mailgun';
 
 ////////////////////////////////////////////////////////////////////////////////
 // eventResponsesOnCreated

@@ -32,12 +32,10 @@ export const comparePasswords = async (password: string, hash: string): Promise<
   await bcrypt.compare(password, hash);
 
 export const createEventResponseEmail = (event: { [key: string]: any }): string => {
-  const description = event.description.length > 250
-    ? `${event.description.substring(0,250)}...`
-    : event.description;
+  const description = event.description.length > 250 ? `${event.description.substring(0, 250)}...` : event.description;
   const startDateTime = new Date(event.startDateTime._seconds * 1000).toString();
   const endDateTime = new Date(event.endDateTime._seconds * 1000).toString();
-  const where = event.isOnline ? 'Online' : (event.location || 'N/A');
+  const where = event.isOnline ? 'Online' : event.location || 'N/A';
 
   return `
   <span><span style='font-weight: bold;'>Event:</span> ${event.name}</span><

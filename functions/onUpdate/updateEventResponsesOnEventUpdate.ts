@@ -59,7 +59,7 @@ export const updateEventResponsesOnEventUpdate = functions.firestore
       .collection(COLLECTIONS.EVENT_RESPONSES)
       .where('event.ref', QUERY_OPERATORS.EQUAL_TO, eventDocRef);
 
-      // TODO: Objects arent being printed correctly
+    // TODO: Objects arent being printed correctly
     console.log(`Event ${context.params.eventId} updated: ${changes.join(', ')}`);
 
     const batch = db.batch();

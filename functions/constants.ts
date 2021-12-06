@@ -146,8 +146,8 @@ export const SALT_ROUNDS: number = 10;
 
 // Mailgun
 export const MAILGUN_API_KEY: string = functions.config().mailgun.api_key;
-export const MAILGUN_DOMAIN: string = "campusgamingnetwork.com";
-export const MAILGUN_USERNAME: string = "api";
+export const MAILGUN_DOMAIN: string = 'campusgamingnetwork.com';
+export const MAILGUN_USERNAME: string = 'api';
 
 // Other
 type TeamRoleType = 'leader' | 'officer';
