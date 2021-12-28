@@ -20,6 +20,7 @@ import { promoteTeammate } from './onCall/promoteTeammate';
 import { demoteTeammate } from './onCall/demoteTeammate';
 import { kickTeammate } from './onCall/kickTeammate';
 import { createTournament } from './onCall/createTournament';
+import { getAllSchools } from './onCall/getAllSchools';
 
 ////////////////////////////////////////////////////////////////////////////////
 // onWrite
@@ -65,6 +66,7 @@ exports.promoteTeammate = promoteTeammate;
 exports.demoteTeammate = demoteTeammate;
 exports.kickTeammate = kickTeammate;
 exports.createTournament = createTournament;
+exports.getAllSchools = getAllSchools;
 exports.trackCreatedUpdated = trackCreatedUpdated;
 exports.updateAlgoliaIndex = updateAlgoliaIndex;
 exports.updateEventResponsesOnEventUpdate = updateEventResponsesOnEventUpdate;
