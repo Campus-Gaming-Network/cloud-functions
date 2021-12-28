@@ -1,11 +1,15 @@
 import { functions } from '../firebase';
-import { DISCORD_WEBHOOK_URL } from '../constants';
+import { DISCORD_WEBHOOK_URL, PRODUCTION_GCLOUD_PROJECT } from '../constants';
 
 import rp from 'request-promise';
 
 ////////////////////////////////////////////////////////////////////////////////
 // authUserOnCreated
 export const authUserOnCreated = functions.auth.user().onCreate(async (user) => {
+  if (process.env.GCLOUD_PROJECT !== PRODUCTION_GCLOUD_PROJECT) {
+    return;
+  }
+
   try {
     await rp({
       method: 'POST',
