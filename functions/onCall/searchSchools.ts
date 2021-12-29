@@ -3,7 +3,7 @@ import { algoliaSearchIndex } from '../algolia';
 
 ////////////////////////////////////////////////////////////////////////////////
 // searchSchools
-export const searchSchools = functions.https.onCall(async (data) => {
+export const searchSchools = functions.https.onCall(async (data, context) => {
   ////////////////////////////////////////////////////////////////////////////////
   //
   // Searches Algolia for schools matching search query.
